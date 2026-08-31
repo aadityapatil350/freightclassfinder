@@ -1,6 +1,6 @@
-# PROJECT — freightclassfinder.com
+# PROJECT — freightclasscalculators.com
 
-Site 2 in the micro-tool network. See `BUILD-freightclassfinder.md` and
+Site 2 in the micro-tool network. See `BUILD-freightclasscalculators.md` and
 `ADVANCED-CALCULATOR-SPEC.md` in the source docs for the full brief.
 
 ## Status

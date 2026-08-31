@@ -1,4 +1,4 @@
-# Design guidelines — freightclassfinder.com
+# Design guidelines — freightclasscalculators.com
 
 Serious, tool-first UI for logistics professionals. Reference the Vercel
 [Web Interface Guidelines](https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md)

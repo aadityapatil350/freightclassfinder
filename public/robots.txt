@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://freightclassfinder.com/sitemap-index.xml
+Sitemap: https://freightclasscalculators.com/sitemap-index.xml

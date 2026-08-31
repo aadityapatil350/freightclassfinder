@@ -1,4 +1,4 @@
-# freightclassfinder.com
+# freightclasscalculators.com
 
 Astro SSG micro-tool: LTL freight classification, density and shipping-cost
 calculators.
