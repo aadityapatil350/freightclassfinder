@@ -160,6 +160,10 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Google Translate: never rewrite code, formulas, or tabular numbers */
+  code, pre, kbd, samp, .font-mono, .tabular, [data-numeric] { }
+  code, pre, kbd, samp { unicode-bidi: isolate; }
+
   /* Grid pattern background for hero */
   .bg-grid {
     background-image:

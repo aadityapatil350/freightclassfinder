@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
 
 export interface Props {
   current?: string;
@@ -29,8 +30,8 @@ const primaryNav = navGroups[0].items;
       class="group flex items-center gap-2 no-underline shrink-0"
       aria-label="FreightClassCalculators home"
     >
-      <span aria-hidden="true" class="flex items-center justify-center w-6 h-6 rounded-md bg-[var(--color-text)] text-[var(--color-bg)] font-bold text-[10px] tracking-tight">FC</span>
-      <span class="font-semibold text-[var(--color-text)] text-sm tracking-tight">FreightClassCalculators</span>
+      <span aria-hidden="true" translate="no" class="notranslate flex items-center justify-center w-6 h-6 rounded-md bg-[var(--color-text)] text-[var(--color-bg)] font-bold text-[10px] tracking-tight">FC</span>
+      <span translate="no" class="notranslate font-semibold text-[var(--color-text)] text-sm tracking-tight">FreightClassCalculators</span>
     </a>
 
     <nav aria-label="Freight tools" class="flex-1 min-w-0 overflow-x-auto no-scrollbar">
@@ -56,7 +57,10 @@ const primaryNav = navGroups[0].items;
       </ul>
     </nav>
 
-    <ThemeToggle />
+    <div class="flex items-center gap-2 shrink-0">
+      <LanguageSwitcher />
+      <ThemeToggle />
+    </div>
   </div>
 </header>
 
