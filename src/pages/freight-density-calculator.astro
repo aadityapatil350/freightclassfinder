@@ -1,0 +1,149 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://freightclassfinder.com/freight-density-calculator';
+const webAppSchema = {
+  "@context": "https://schema.org", "@type": "WebApplication",
+  "name": "Freight Density Calculator", "url": pageUrl,
+  "applicationCategory": "BusinessApplication", "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const faqs = [
+  { q: "What is freight density?", a: "Freight density is weight divided by volume in pounds per cubic foot (lb/ft³) or kilograms per cubic metre (kg/m³). It is the single most important number in LTL classification — density determines your freight class on the standard 50–500 density scale." },
+  { q: "How do you calculate freight density?", a: "Density = weight ÷ volume. In imperial: convert L × W × H in inches to cubic feet by dividing by 1728, then divide the weight in pounds by that volume. The tool above does the conversion in real time." },
+  { q: "Should I use the box or pallet dimensions?", a: "Use the outermost extremes — pallet footprint plus overhang, plus the pallet deck height. Carriers measure the load as it sits on the trailer, not the packaging inside." },
+  { q: "What density is class 100?", a: "9 to 10.5 lb/ft³ on the standard density scale. Denser lands you at class 92.5 or below; less dense pushes you to class 110 or higher." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": faqs.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+---
+<BaseLayout
+  title="Freight Density Calculator – lb/ft³ Free"
+  description="Free freight density calculator. Enter length, width, height and weight; get density in lb/ft³ or kg/m³ plus the resulting freight class on the density scale."
+  canonical={pageUrl}
+  schema={[webAppSchema, faqSchema]}
+>
+  <SiteHeader current="/freight-density-calculator" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-2">Freight Density Calculator</h1>
+    <p class="text-[var(--color-text-muted)] mb-6">Enter dimensions and weight to compute density and the resulting freight class on the standard 50–500 density scale.</p>
+
+    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm">
+      <fieldset class="flex items-center gap-4 text-sm mb-4">
+        <label class="text-[var(--color-text-muted)]">Units:</label>
+        <label class="inline-flex items-center gap-1"><input type="radio" name="dens-units" value="imperial" checked /> in / lb</label>
+        <label class="inline-flex items-center gap-1"><input type="radio" name="dens-units" value="metric" /> cm / kg</label>
+      </fieldset>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div><label class="block text-sm mb-1">Length <span class="unit-len">in</span></label><input id="l" type="number" value="48" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Width <span class="unit-len">in</span></label><input id="w" type="number" value="40" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Height <span class="unit-len">in</span></label><input id="h" type="number" value="48" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Weight <span class="unit-wt">lb</span></label><input id="wt" type="number" value="500" step="any" min="0"/></div>
+      </div>
+
+      <div class="mt-5 rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-4 space-y-2">
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">Volume</span><span id="r-vol" class="font-medium">—</span></div>
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">Density</span><span id="r-dens" class="font-medium">—</span></div>
+        <div class="flex justify-between border-t border-[var(--color-result-border)] pt-2"><span class="text-sm">Freight Class</span><span id="r-cls" class="text-2xl font-bold text-[var(--color-accent)]">—</span></div>
+      </div>
+    </div>
+
+    <div class="mt-4 rounded-md border-l-4 border-[var(--color-warning)] bg-[var(--color-bg-subtle)] px-4 py-3 text-sm">
+      <strong>Density-based estimate.</strong> If your commodity has an assigned NMFC item, that item governs your class regardless of density.
+    </div>
+
+    <AdSlot size="leaderboard" />
+
+    <article class="space-y-6 text-[var(--color-text)]">
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">The Density Formula</h2>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm">
+          Volume (ft³) = (L × W × H in) ÷ 1728<br/>
+          Density (lb/ft³) = Weight (lb) ÷ Volume (ft³)
+        </div>
+        <p class="text-[var(--color-text-muted)] mt-2">For metric: multiply your kg/m³ result by 0.0624 to get lb/ft³, or divide lb/ft³ by 0.0624 to get kg/m³.</p>
+      </section>
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Density → Class Cheat Sheet</h2>
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>Density (lb/ft³)</th><th class="num">Class</th></tr></thead>
+            <tbody>
+              <tr><td>&lt; 1</td><td class="num">500</td></tr>
+              <tr><td>1 – &lt;2</td><td class="num">400</td></tr>
+              <tr><td>2 – &lt;3</td><td class="num">300</td></tr>
+              <tr><td>3 – &lt;4</td><td class="num">250</td></tr>
+              <tr><td>4 – &lt;5</td><td class="num">200</td></tr>
+              <tr><td>5 – &lt;6</td><td class="num">175</td></tr>
+              <tr><td>6 – &lt;7</td><td class="num">150</td></tr>
+              <tr><td>7 – &lt;8</td><td class="num">125</td></tr>
+              <tr><td>8 – &lt;9</td><td class="num">110</td></tr>
+              <tr><td>9 – &lt;10.5</td><td class="num">100</td></tr>
+              <tr><td>10.5 – &lt;12</td><td class="num">92.5</td></tr>
+              <tr><td>12 – &lt;13.5</td><td class="num">85</td></tr>
+              <tr><td>13.5 – &lt;15</td><td class="num">77.5</td></tr>
+              <tr><td>15 – &lt;22.5</td><td class="num">70</td></tr>
+              <tr><td>22.5 – &lt;30</td><td class="num">65</td></tr>
+              <tr><td>30 – &lt;35</td><td class="num">60</td></tr>
+              <tr><td>35 – &lt;50</td><td class="num">55</td></tr>
+              <tr><td>≥ 50</td><td class="num">50</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Density scale published by NMFTA and used by US LTL carriers. Higher density → lower class → lower rate.</p>
+      </section>
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/freight-density-calculator" />
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+  import { volumeFt3, density, classFromDensity, cmToIn, kgToLb, inToCm, lbToKg } from '../lib/freight-math.js';
+  const $ = (id) => document.getElementById(id);
+  const state = { units: 'imperial' };
+
+  function update() {
+    const l = Number($('l').value), w = Number($('w').value), h = Number($('h').value), wt = Number($('wt').value);
+    let L = l, W = w, H = h, WT = wt;
+    if (state.units === 'metric') { L = cmToIn(l); W = cmToIn(w); H = cmToIn(h); WT = kgToLb(wt); }
+    try {
+      const v = volumeFt3(L, W, H);
+      const d = density(WT, v);
+      const c = classFromDensity(d);
+      $('r-vol').textContent = v.toFixed(2) + ' ft³ (' + (v / 35.3147).toFixed(3) + ' m³)';
+      $('r-dens').textContent = d.toFixed(2) + ' lb/ft³ (' + (d * 16.0185).toFixed(1) + ' kg/m³)';
+      $('r-cls').textContent = String(c);
+    } catch (e) {
+      $('r-vol').textContent = '—';
+      $('r-dens').textContent = '—';
+      $('r-cls').textContent = '—';
+    }
+  }
+
+  document.querySelectorAll('#l, #w, #h, #wt').forEach(el => el.addEventListener('input', update));
+  document.querySelectorAll('input[name="dens-units"]').forEach((el) => {
+    el.addEventListener('change', () => {
+      const next = el.value;
+      if (next === state.units) return;
+      ['l','w','h'].forEach(id => { const v = Number($(id).value); $(id).value = next === 'metric' ? inToCm(v).toFixed(2) : cmToIn(v).toFixed(2); });
+      const wv = Number($('wt').value);
+      $('wt').value = next === 'metric' ? lbToKg(wv).toFixed(2) : kgToLb(wv).toFixed(2);
+      state.units = next;
+      document.querySelectorAll('.unit-len').forEach(e => e.textContent = next === 'metric' ? 'cm' : 'in');
+      document.querySelectorAll('.unit-wt').forEach(e => e.textContent = next === 'metric' ? 'kg' : 'lb');
+      update();
+    });
+  });
+  update();
+</script>

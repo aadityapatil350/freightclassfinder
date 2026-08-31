@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://freightclassfinder.com/pallet-calculator';
+const webAppSchema = {
+  "@context": "https://schema.org", "@type": "WebApplication",
+  "name": "Pallet Calculator", "url": pageUrl,
+  "applicationCategory": "BusinessApplication", "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const faqs = [
+  { q: "How many boxes fit on a pallet?", a: "It depends on box footprint, box height, pallet footprint (typically 48×40 in the US), and the maximum allowed load height (commonly 48–60 in for stackable, up to 96 in unstackable). The calculator tries both box orientations and returns whichever fits more." },
+  { q: "How many pallets fit on a 53' trailer?", a: "A standard 53' dry van fits 26 pallets in a single tier (48×40 GMA, oriented tightly). 48' trailers fit 24. Double-stacked shipments can double that if weight and product allow." },
+  { q: "What are standard pallet dimensions?", a: "US GMA is 48×40 in. Other common sizes are 42×42 and 48×48. In Europe, EUR-1 is 1200×800 mm (about 47.24×31.5 in). See R5 in the project docs for source verification." },
+  { q: "Do carriers measure box or pallet dimensions?", a: "The outermost extremes — pallet footprint plus overhang, plus pallet deck height. Even a 30×30 box on a 48×40 pallet is measured as 48×40. Use the freight class calculator for classification-ready dimensions." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": faqs.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+---
+<BaseLayout
+  title="Pallet Calculator – How Many Boxes Fit, Free"
+  description="Free pallet calculator: how many boxes per pallet, both orientations tried automatically. Standard pallet presets and trailer fit estimate."
+  canonical={pageUrl}
+  schema={[webAppSchema, faqSchema]}
+>
+  <SiteHeader current="/pallet-calculator" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-2">Pallet Calculator</h1>
+    <p class="text-[var(--color-text-muted)] mb-6">How many boxes fit on a pallet? Enter box dimensions and pallet limits; both orientations are tested automatically.</p>
+
+    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm">
+      <h2 class="font-semibold mb-3">Pallet</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div><label class="block text-sm mb-1">Preset</label><select id="preset"></select></div>
+        <div><label class="block text-sm mb-1">Length (in)</label><input id="pl" type="number" value="48" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Width (in)</label><input id="pw" type="number" value="40" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Deck height (in)</label><input id="pdh" type="number" value="6" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Max load height (in)</label><input id="pmh" type="number" value="60" step="any" min="0"/></div>
+      </div>
+
+      <h2 class="font-semibold mt-6 mb-3">Box</h2>
+      <div class="grid grid-cols-3 gap-3">
+        <div><label class="block text-sm mb-1">L (in)</label><input id="bl" type="number" value="12" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">W (in)</label><input id="bw" type="number" value="10" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">H (in)</label><input id="bh" type="number" value="8" step="any" min="0"/></div>
+      </div>
+
+      <div class="mt-5 rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-4 space-y-2">
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">Boxes per layer</span><span id="r-layer" class="font-medium">—</span></div>
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">Layers</span><span id="r-layers" class="font-medium">—</span></div>
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">Orientation</span><span id="r-orient" class="font-medium">—</span></div>
+        <div class="flex justify-between border-t border-[var(--color-result-border)] pt-2"><span class="text-sm">Total boxes</span><span id="r-total" class="text-2xl font-bold text-[var(--color-accent)]">—</span></div>
+      </div>
+    </div>
+
+    <AdSlot size="leaderboard" />
+
+    <article class="space-y-6">
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Standard Trailer Capacities</h2>
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>Trailer</th><th class="num">48×40 pallets (single tier, tight)</th></tr></thead>
+            <tbody>
+              <tr><td>53' dry van</td><td class="num">26</td></tr>
+              <tr><td>48' dry van</td><td class="num">24</td></tr>
+              <tr><td>28' pup</td><td class="num">14</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Assumes 48×40 GMA pallets pinwheeled or straight-loaded. Trailer capacity varies with pallet orientation, actual trailer inside dimensions, weight distribution, and whether shipments are stackable. R5 in project docs for source verification.</p>
+      </section>
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">How the Math Works</h2>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm">
+          per_layer_A = floor(palletL ÷ boxL) × floor(palletW ÷ boxW)<br/>
+          per_layer_B = floor(palletL ÷ boxW) × floor(palletW ÷ boxL)<br/>
+          per_layer = max(per_layer_A, per_layer_B)<br/>
+          layers = floor((maxHeight − deckHeight) ÷ boxH)<br/>
+          total = per_layer × layers
+        </div>
+        <p class="text-[var(--color-text-muted)] mt-2">This is a naïve orientation search — good enough for uniform boxes. Mixed-SKU or interlocking patterns need dedicated pallet-building software.</p>
+      </section>
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/pallet-calculator" />
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+  import { palletLoad } from '../lib/freight-math.js';
+  import { PALLET_PRESETS } from '../data/density-classes.js';
+  const $ = (id) => document.getElementById(id);
+  const preset = $('preset');
+  preset.innerHTML = PALLET_PRESETS.filter(p => p.key !== 'custom').map(p => `<option value="${p.key}">${p.label}</option>`).join('') + '<option value="custom">Custom</option>';
+  preset.addEventListener('change', () => {
+    const p = PALLET_PRESETS.find(x => x.key === preset.value);
+    if (p && p.key !== 'custom') {
+      $('pl').value = p.l; $('pw').value = p.w; $('pdh').value = p.deck;
+    }
+    update();
+  });
+
+  function update() {
+    try {
+      const r = palletLoad({
+        palletL: Number($('pl').value),
+        palletW: Number($('pw').value),
+        palletMaxH: Number($('pmh').value),
+        palletDeckH: Number($('pdh').value),
+        boxL: Number($('bl').value),
+        boxW: Number($('bw').value),
+        boxH: Number($('bh').value),
+      });
+      $('r-layer').textContent = String(r.perLayer);
+      $('r-layers').textContent = String(r.layers);
+      $('r-orient').textContent = r.orientation;
+      $('r-total').textContent = String(r.total);
+    } catch { $('r-total').textContent = '—'; }
+  }
+  document.querySelectorAll('#pl,#pw,#pdh,#pmh,#bl,#bw,#bh').forEach(el => el.addEventListener('input', update));
+  update();
+</script>

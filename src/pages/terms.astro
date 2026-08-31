@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+const pageUrl = 'https://freightclassfinder.com/terms';
+---
+<BaseLayout title="Terms of Use – FreightClassFinder.com" description="Terms of use. All calculators are provided as-is; freight class results are estimates and your carrier's NMFC item governs the billed class." canonical={pageUrl}>
+  <SiteHeader current="/terms" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10 prose-section">
+    <h1 class="text-3xl font-bold mb-4">Terms of Use</h1>
+    <p class="text-[var(--color-text-muted)]">Last updated: 31 August 2026.</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">As-is service</h2>
+    <p class="text-[var(--color-text-muted)]">All calculators and reference material on FreightClassFinder.com are provided <strong>as-is</strong>, without warranty of any kind. We make no guarantees about the accuracy, completeness, or fitness for a particular purpose of any information on this site.</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">Freight class results are estimates</h2>
+    <p class="text-[var(--color-text-muted)]">Density-based freight class computed by our tools is an <strong>estimate</strong>. If your commodity has a specific NMFC item number, that item — assigned and maintained by the NMFTA — governs your billed class regardless of density. Your carrier or freight broker is the authoritative source for classification of any specific shipment.</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">Liability</h2>
+    <p class="text-[var(--color-text-muted)]">We accept no liability for reclassification charges, correction invoices, damage claims, or any other loss arising from use of the calculators or content on this site. Verify classifications with your carrier before tendering freight.</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">Third-party marks</h2>
+    <p class="text-[var(--color-text-muted)]">FedEx, UPS, USPS, DHL, and other carrier names are trademarks of their respective owners. Use of these names on our site is nominative — for reference only — and does not imply affiliation or endorsement.</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">NMFC</h2>
+    <p class="text-[var(--color-text-muted)]">"NMFC" and "National Motor Freight Classification" are marks of the NMFTA. We do not reproduce the NMFC database. See our <a href="/nmfc-codes-explained">NMFC explainer</a> for how to obtain a code legitimately.</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">Governing law</h2>
+    <p class="text-[var(--color-text-muted)]">These terms are governed by the laws of the United States, without regard to conflict-of-law rules.</p>
+  </main>
+  <SiteFooter />
+</BaseLayout>

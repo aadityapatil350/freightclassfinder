@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+const pageUrl = 'https://freightclassfinder.com/privacy';
+---
+<BaseLayout title="Privacy Policy – FreightClassFinder.com" description="Privacy policy for FreightClassFinder.com. All calculations run in your browser; no shipment data is transmitted or stored." canonical={pageUrl}>
+  <SiteHeader current="/privacy" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10 prose-section">
+    <h1 class="text-3xl font-bold mb-4">Privacy Policy</h1>
+    <p class="text-[var(--color-text-muted)]">Last updated: 31 August 2026.</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">What we collect</h2>
+    <p class="text-[var(--color-text-muted)]">FreightClassFinder.com is a set of client-side calculators. <strong>All calculations run in your browser.</strong> Weights, dimensions, and any other shipment details you enter into a calculator are never transmitted to our servers.</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">Cookies and local storage</h2>
+    <p class="text-[var(--color-text-muted)]">We use <code>localStorage</code> to remember your dark/light theme preference. That's it.</p>
+    <p class="text-[var(--color-text-muted)] mt-2">Once ads are enabled, Google AdSense may set cookies on your device via the DART cookie for personalized advertising. You can review Google's ad settings at <a href="https://adssettings.google.com/">adssettings.google.com</a> and opt out of personalized ads for the current browser.</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">Analytics</h2>
+    <p class="text-[var(--color-text-muted)]">If Google Analytics is enabled, it collects standard non-identifying metrics (pages viewed, referrer, approximate location, device type). It does not receive your calculator inputs.</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">Contact</h2>
+    <p class="text-[var(--color-text-muted)]">Questions: <a href="/contact">contact us</a>.</p>
+  </main>
+  <SiteFooter />
+</BaseLayout>

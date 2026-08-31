@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://freightclassfinder.com/nmfc-codes-explained';
+
+const articleSchema = {
+  "@context": "https://schema.org", "@type": "Article",
+  "headline": "NMFC Codes Explained: What They Are, How to Look One Up",
+  "url": pageUrl,
+  "author": { "@type": "Organization", "name": "FreightClassFinder.com" },
+  "datePublished": "2026-08-31",
+};
+
+const faqs = [
+  { q: "What is an NMFC code?", a: "NMFC (National Motor Freight Classification) codes are item numbers maintained by the NMFTA that assign a specific class to specific commodities. They are proprietary and require a paid subscription to look up in full." },
+  { q: "How do you determine an NMFC code?", a: "You either subscribe to ClassIT (NMFTA's official service), ask your carrier or freight broker to look it up, or use a density-based estimate when your commodity has no specific NMFC item. Density-based classification only applies to items that lack a specific NMFC listing." },
+  { q: "What is the difference between an NMFC code and freight class?", a: "Freight class (50–500) is the pricing tier. NMFC item number is the commodity-specific identifier that decides which class applies. Two shipments with the same NMFC item always share a class; two shipments at the same density may have different classes if one has a specific NMFC item that overrides the density scale." },
+  { q: "Where can I look up NMFC codes?", a: "NMFTA's ClassIT is the official source. Your LTL carrier's customer service will also look one up for you free — they have a license. Do not trust third-party 'free' NMFC databases; they are typically outdated or invented." },
+  { q: "Is there a free NMFC code list?", a: "No. NMFC is copyrighted and requires an NMFTA license. Any site claiming a free full list is either infringing or providing invented data." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": faqs.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+---
+<BaseLayout
+  title="NMFC Codes Explained – What They Are, How to Look One Up"
+  description="Honest guide to NMFC codes: what the National Motor Freight Classification is, how it differs from freight class, and how to obtain a code for your shipment."
+  canonical={pageUrl}
+  schema={[articleSchema, faqSchema]}
+>
+  <SiteHeader current="/nmfc-codes-explained" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-3">NMFC Codes Explained</h1>
+    <p class="text-[var(--color-text-muted)] mb-6">Straight answers about the National Motor Freight Classification system: what NMFC codes are, who owns them, how they interact with density-based freight class, and how to legitimately obtain one.</p>
+
+    <div class="rounded-md border-l-4 border-[var(--color-warning)] bg-[var(--color-bg-subtle)] px-4 py-3 text-sm mb-6">
+      <strong>We do not host an NMFC lookup.</strong> The NMFC database is proprietary and copyrighted by the NMFTA. Any site claiming a free full lookup is misleading. The legitimate paths to a code are listed below.
+    </div>
+
+    <article class="space-y-8 text-[var(--color-text)]">
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">What is an NMFC code?</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">The National Motor Freight Classification (NMFC) is a standard maintained by the <strong>National Motor Freight Traffic Association (NMFTA)</strong>, a non-profit membership organization made up of US motor carriers. It assigns every commodity that moves by less-than-truckload (LTL) freight an <strong>item number</strong> and a corresponding <strong>class</strong> (from the standard 18-tier scale, 50 through 500).</p>
+        <p class="leading-relaxed text-[var(--color-text-muted)] mt-2">The item number is the commodity ID; the class is the price band. When your carrier processes a Bill of Lading, they look up the NMFC item, get the class, and rate the shipment accordingly. If your commodity has no NMFC item, the carrier falls back on density-based classification.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">The four factors NMFC uses</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)] mb-2">NMFTA classifies commodities based on four transportation characteristics:</p>
+        <ul class="space-y-2 text-[var(--color-text-muted)]">
+          <li><strong>Density</strong> — weight per cubic foot. Denser goods are cheaper because they fill less trailer volume per pound.</li>
+          <li><strong>Stowability</strong> — how easily the item can be loaded next to other freight. Odd shapes, hazardous materials, and items that can't be stacked are penalized.</li>
+          <li><strong>Handling</strong> — the difficulty and risk of loading, unloading, and moving the item. Fragile, heavy, or protruding items are penalized.</li>
+          <li><strong>Liability</strong> — the item's value per pound, plus its propensity to be damaged, stolen, or damage other freight. High-value or hazardous cargo carries a higher class.</li>
+        </ul>
+        <p class="leading-relaxed text-[var(--color-text-muted)] mt-3">Because NMFTA weighs all four factors, an NMFC item can override what pure density would suggest. Two items at the same 8 lb/ft³ can end up at different classes if one has poor stowability or a valuable/hazardous profile.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">NMFC item vs freight class — the difference matters</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">Freight class is a number from 50 to 500 that determines your rate tier. An NMFC item is a specific ID (like "NMFC 156600" for a hypothetical commodity) that maps to a class.</p>
+        <p class="leading-relaxed text-[var(--color-text-muted)] mt-2">The practical rule: <strong>if your commodity has a specific NMFC item listed, that item governs your class</strong>, regardless of what density would say. Density-based classification is only the default for items with no specific NMFC listing. Every calculator on this site — including the density scale we publish — is a fallback estimate. Your carrier's actual bill will follow the NMFC assignment if one exists.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Why we don't publish an NMFC lookup</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">The NMFC is copyrighted intellectual property owned by the NMFTA. Reproducing item numbers or the commodity-to-item mappings without a license is infringement. Some "free NMFC lookup" sites on the first page of Google either present a very small, outdated subset or make numbers up. Neither helps you avoid a reclassification invoice — in fact, using an incorrect NMFC on your BOL is one of the fastest ways to get one.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">How to obtain the correct NMFC code</h2>
+        <ol class="list-decimal list-inside space-y-2 text-[var(--color-text-muted)]">
+          <li><strong>Ask your carrier.</strong> Every LTL carrier licenses the NMFC and their customer service reps will look up an item for you at no cost. This is the fastest legitimate route.</li>
+          <li><strong>Ask your freight broker.</strong> Brokers are equipped to classify your goods and put the correct item on the BOL. If you use a broker regularly, this is normally part of the service.</li>
+          <li><strong>Subscribe to ClassIT.</strong> ClassIT is the NMFTA's official online lookup. It requires a paid subscription. If you tender freight regularly and want to classify in-house, this is the durable option.</li>
+          <li><strong>Contact NMFTA directly.</strong> For one-off questions or classification disputes, NMFTA's customer service will assist. Their site is nmfta.org.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">When density-based classification is the right answer</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">A significant fraction of NMFC items are density-based to begin with — the item entry specifies "class subject to density." For those, calculating density (see our <a href="/freight-density-calculator">density calculator</a>) gives you the correct answer. If your carrier confirms your commodity is density-classified, you can rate the shipment yourself using the density scale.</p>
+        <p class="leading-relaxed text-[var(--color-text-muted)] mt-2">For commodities with a fixed class assignment, density is informational only — your actual class is whatever NMFTA has set for that item.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Consequences of the wrong NMFC or class</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">Carriers routinely inspect shipments on the dock. If the declared class or NMFC item doesn't match what the inspector observes — wrong dimensions, wrong weight, wrong commodity description — the carrier issues a <strong>reclassification / correction invoice</strong>, often weeks after delivery. Correction invoices typically include the class differential plus an inspection fee. Some carriers add automatic surcharges.</p>
+        <p class="leading-relaxed text-[var(--color-text-muted)] mt-2">Over time, patterns of misclassification erode your standing with a carrier and can push you into worse rate schedules on the next contract cycle. Getting the NMFC right up front is cheaper than getting it corrected later.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Related — density-based tools</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">Our tools handle the density-based fallback used when an NMFC item doesn't apply or specifies "subject to density":</p>
+        <ul class="list-disc list-inside space-y-1 text-[var(--color-text-muted)] mt-2">
+          <li><a href="/">Freight class calculator</a> — multi-item shipments, pallet-aware, breakpoint optimizer</li>
+          <li><a href="/freight-density-calculator">Freight density calculator</a> — single-input density in lb/ft³ or kg/m³</li>
+          <li><a href="/what-is-freight-class">What is freight class?</a> — the density scale explained</li>
+        </ul>
+      </section>
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/nmfc-codes-explained" />
+  </main>
+  <SiteFooter />
+</BaseLayout>

@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://freightclassfinder.com/fuel-surcharge-calculator';
+const webAppSchema = {
+  "@context": "https://schema.org", "@type": "WebApplication",
+  "name": "Fuel Surcharge Calculator", "url": pageUrl,
+  "applicationCategory": "BusinessApplication", "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const faqs = [
+  { q: "What is a fuel surcharge?", a: "A percentage added to the line-haul portion of a freight bill to reflect diesel prices above a base level. Carriers publish an escalator: for each fixed step above the base, the surcharge increases by a fixed percentage." },
+  { q: "How is the fuel surcharge calculated?", a: "Surcharge % = ((current DOE diesel price − base) ÷ step size) × step %. Then Fuel $ = line-haul × surcharge %. This tool does not fetch live prices — enter the current DOE index yourself." },
+  { q: "Where do I find the current diesel price?", a: "The US Energy Information Administration publishes the weekly national on-highway diesel average every Monday. Search for 'EIA weekly diesel'. Your carrier's fuel surcharge is usually based on that index." },
+  { q: "Why doesn't the calculator show this week's rate?", a: "Static sites can't guarantee freshness. Enter the DOE figure yourself for an accurate surcharge; that way the calculation is auditable and doesn't rely on a stale cache." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": faqs.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+---
+<BaseLayout
+  title="Fuel Surcharge Calculator – LTL / TL, Free"
+  description="Free fuel surcharge calculator. Enter DOE diesel price, base and step; get the surcharge percentage and dollar amount on your line-haul."
+  canonical={pageUrl}
+  schema={[webAppSchema, faqSchema]}
+>
+  <SiteHeader current="/fuel-surcharge-calculator" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-2">Fuel Surcharge Calculator</h1>
+    <p class="text-[var(--color-text-muted)] mb-6">Compute your carrier's fuel surcharge from the DOE weekly diesel index, base price, and escalator step.</p>
+
+    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm">
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="block text-sm mb-1">Current DOE diesel ($/gal)</label><input id="doe" type="number" value="3.80" step="0.01" min="0"/></div>
+        <div><label class="block text-sm mb-1">Base price ($/gal)</label><input id="base" type="number" value="1.20" step="0.01" min="0"/></div>
+        <div><label class="block text-sm mb-1">Step size ($)</label><input id="step" type="number" value="0.05" step="0.01" min="0"/></div>
+        <div><label class="block text-sm mb-1">% per step</label><input id="pct" type="number" value="0.5" step="0.1" min="0"/></div>
+        <div class="col-span-2"><label class="block text-sm mb-1">Line-haul ($)</label><input id="lh" type="number" value="1000" step="any" min="0"/></div>
+      </div>
+
+      <div class="mt-5 rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-4 space-y-2">
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">Surcharge percentage</span><span id="r-pct" class="text-xl font-semibold">—</span></div>
+        <div class="flex justify-between border-t border-[var(--color-result-border)] pt-2"><span class="text-sm">Surcharge amount</span><span id="r-amt" class="text-2xl font-bold text-[var(--color-accent)]">—</span></div>
+      </div>
+    </div>
+
+    <p class="mt-4 text-xs text-[var(--color-text-subtle)]">This tool does not fetch live diesel prices. Look up the current EIA weekly on-highway diesel average and enter it above.</p>
+
+    <AdSlot size="leaderboard" />
+
+    <article class="space-y-6">
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">The Escalator</h2>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm">
+          steps = (doe_price − base) ÷ step_size<br/>
+          surcharge% = steps × pct_per_step<br/>
+          fuel $ = line_haul × surcharge% ÷ 100
+        </div>
+        <p class="text-[var(--color-text-muted)] mt-2">Carriers publish their own base, step, and pct-per-step values. Ask your rep for the tariff document; the numbers vary widely.</p>
+      </section>
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/fuel-surcharge-calculator" />
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+  import { fuelSurchargePct, fuelSurchargeAmount } from '../lib/freight-math.js';
+  const $ = (id) => document.getElementById(id);
+  function update() {
+    try {
+      const pct = fuelSurchargePct(Number($('doe').value), Number($('base').value), Number($('step').value), Number($('pct').value));
+      const amt = fuelSurchargeAmount(Number($('lh').value), pct);
+      $('r-pct').textContent = pct.toFixed(2) + '%';
+      $('r-amt').textContent = '$' + amt.toFixed(2);
+    } catch { $('r-pct').textContent = '—'; $('r-amt').textContent = '—'; }
+  }
+  document.querySelectorAll('#doe,#base,#step,#pct,#lh').forEach(el => el.addEventListener('input', update));
+  update();
+</script>

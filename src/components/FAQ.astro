@@ -1,0 +1,17 @@
+---
+export interface Props {
+  items: { q: string; a: string }[];
+}
+const { items } = Astro.props;
+---
+<section class="mt-12" aria-label="Frequently asked questions">
+  <h2 class="text-2xl font-semibold text-[var(--color-text)] mb-6">Frequently Asked Questions</h2>
+  <dl class="space-y-6">
+    {items.map(item => (
+      <div class="border-b border-[var(--color-border)] pb-6">
+        <dt class="text-lg font-medium text-[var(--color-text)] mb-2">{item.q}</dt>
+        <dd class="text-[var(--color-text-muted)] leading-relaxed" set:html={item.a} />
+      </div>
+    ))}
+  </dl>
+</section>

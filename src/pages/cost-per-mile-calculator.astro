@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://freightclassfinder.com/cost-per-mile-calculator';
+const webAppSchema = {
+  "@context": "https://schema.org", "@type": "WebApplication",
+  "name": "Trucking Cost per Mile Calculator", "url": pageUrl,
+  "applicationCategory": "BusinessApplication", "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const faqs = [
+  { q: "What is cost per mile?", a: "Total operating cost — fixed + variable — divided by total miles driven in a period. A common yardstick for owner-operators and small carriers to price loads." },
+  { q: "What is a good cost per mile for trucking?", a: "Industry averages sit around $1.80–$2.20 all-in for a company driver, higher for owner-operators (ATRI reports vary annually). Anything under $1.50 is aggressive and probably under-counting maintenance and depreciation." },
+  { q: "What counts as fixed vs variable?", a: "Fixed: truck/trailer payment, insurance, permits, ELD subscription, salaries paid regardless of miles. Variable: fuel, tolls, DEF, maintenance, tires, per-mile driver pay." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": faqs.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+---
+<BaseLayout
+  title="Trucking Cost per Mile Calculator – Free"
+  description="Free trucking cost per mile calculator. Add up fixed and variable costs, divide by total miles, and see your true CPM for pricing loads."
+  canonical={pageUrl}
+  schema={[webAppSchema, faqSchema]}
+>
+  <SiteHeader current="/cost-per-mile-calculator" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-2">Trucking Cost per Mile Calculator</h1>
+    <p class="text-[var(--color-text-muted)] mb-6">Add up fixed and variable costs, enter total miles, and get your operating cost per mile.</p>
+
+    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm">
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="block text-sm mb-1">Fixed costs / period ($)</label><input id="fx" type="number" value="4000" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Variable costs / period ($)</label><input id="vx" type="number" value="6000" step="any" min="0"/></div>
+        <div class="col-span-2"><label class="block text-sm mb-1">Total miles / period</label><input id="mi" type="number" value="8000" step="any" min="0"/></div>
+      </div>
+
+      <div class="mt-5 rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-4 space-y-2">
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">Total cost</span><span id="r-total" class="font-medium">—</span></div>
+        <div class="flex justify-between border-t border-[var(--color-result-border)] pt-2"><span class="text-sm">Cost per mile</span><span id="r-cpm" class="text-2xl font-bold text-[var(--color-accent)]">—</span></div>
+      </div>
+    </div>
+
+    <AdSlot size="leaderboard" />
+
+    <article class="space-y-6">
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Fixed vs Variable — Common Line Items</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="rounded-lg border border-[var(--color-border)] p-4">
+            <h3 class="font-semibold mb-2">Fixed</h3>
+            <ul class="text-sm text-[var(--color-text-muted)] space-y-1">
+              <li>Truck / trailer payment</li>
+              <li>Insurance (liability, cargo, physical)</li>
+              <li>Permits & licenses (IFTA, UCR, apportioned plates)</li>
+              <li>ELD / TMS subscriptions</li>
+              <li>Salaried staff (dispatcher, back office)</li>
+            </ul>
+          </div>
+          <div class="rounded-lg border border-[var(--color-border)] p-4">
+            <h3 class="font-semibold mb-2">Variable</h3>
+            <ul class="text-sm text-[var(--color-text-muted)] space-y-1">
+              <li>Fuel & DEF</li>
+              <li>Tolls & scale fees</li>
+              <li>Maintenance & tires</li>
+              <li>Per-mile driver pay</li>
+              <li>Lumper / detention (net of reimbursement)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/cost-per-mile-calculator" />
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+  import { costPerMile } from '../lib/freight-math.js';
+  const $ = (id) => document.getElementById(id);
+  function update() {
+    try {
+      const fx = Number($('fx').value), vx = Number($('vx').value), mi = Number($('mi').value);
+      const cpm = costPerMile(fx, vx, mi);
+      $('r-total').textContent = '$' + (fx + vx).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      $('r-cpm').textContent = '$' + cpm.toFixed(3) + ' / mi';
+    } catch { $('r-cpm').textContent = '—'; $('r-total').textContent = '—'; }
+  }
+  document.querySelectorAll('#fx,#vx,#mi').forEach(el => el.addEventListener('input', update));
+  update();
+</script>

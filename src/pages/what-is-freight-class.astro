@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://freightclassfinder.com/what-is-freight-class';
+const articleSchema = {
+  "@context": "https://schema.org", "@type": "Article",
+  "headline": "What is Freight Class? The Complete Guide",
+  "url": pageUrl,
+  "author": { "@type": "Organization", "name": "FreightClassFinder.com" },
+  "datePublished": "2026-08-31",
+};
+
+const faqs = [
+  { q: "What is freight?", a: "Freight is commercial cargo — goods transported for compensation, typically palletized or containerized, by truck, rail, ship or plane." },
+  { q: "What is freight class?", a: "Freight class is a 50–500 numerical rating that determines how LTL carriers price a shipment. Lower numbers are denser, easier to handle, and cheaper to ship." },
+  { q: "How many freight classes are there?", a: "18 classes: 50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, and 500." },
+  { q: "What is a class 100 freight?", a: "A shipment with a density between 9 and 10.5 lb/ft³, or an NMFC item assigned class 100. Common examples include lightly-packed cases of goods, small appliances, or partially-full pallets." },
+  { q: "Is a higher or lower class better?", a: "Lower is better — cheaper. Class 50 is the cheapest tier (bricks, dense metals). Class 500 is the most expensive (ping-pong balls, large empty cases)." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": faqs.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+---
+<BaseLayout
+  title="What is Freight Class? The Complete Guide (50–500)"
+  description="Freight class explained: the 18-tier NMFTA density scale, the four classification factors, how to determine your class, and how to lower it legitimately."
+  canonical={pageUrl}
+  schema={[articleSchema, faqSchema]}
+>
+  <SiteHeader current="/what-is-freight-class" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-3">What is Freight Class?</h1>
+    <p class="text-[var(--color-text-muted)] mb-6">The 18-tier system that decides your LTL rate — what it is, how it's assigned, and how to influence it honestly.</p>
+
+    <article class="space-y-8 text-[var(--color-text)]">
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">The 50–500 scale</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">Freight class is a standardized rating maintained by the NMFTA (National Motor Freight Traffic Association). Every LTL shipment in the US gets a class from 50 to 500. There are 18 tiers: 50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400 and 500. Lower numbers are denser and cheaper to ship; higher numbers are less dense (or otherwise harder to handle) and more expensive.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">The four factors</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">A commodity's class reflects four transportation characteristics:</p>
+        <ul class="space-y-2 text-[var(--color-text-muted)] mt-2">
+          <li><strong>Density</strong> — weight per cubic foot. Most influential single factor.</li>
+          <li><strong>Stowability</strong> — how easily it fits alongside other freight. Irregular shapes, hazmat, or "do not stack" pallets are penalized.</li>
+          <li><strong>Handling</strong> — how hard it is to load/unload/move. Fragile, heavy, or protruding items are penalized.</li>
+          <li><strong>Liability</strong> — value per pound and susceptibility to loss or damage. High-value cargo carries a higher class.</li>
+        </ul>
+        <p class="leading-relaxed text-[var(--color-text-muted)] mt-3">For items with a specific NMFC item number, all four factors are baked into the assigned class. For items that fall back on density-based classification, only density is considered.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Density → class, the standard scale</h2>
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>Density (lb/ft³)</th><th class="num">Class</th><th>Rough examples</th></tr></thead>
+            <tbody>
+              <tr><td>≥ 50</td><td class="num">50</td><td>Bricks, sand, dense metals</td></tr>
+              <tr><td>35 – &lt;50</td><td class="num">55</td><td>Cast iron parts, hardwood flooring</td></tr>
+              <tr><td>30 – &lt;35</td><td class="num">60</td><td>Steel bars, glass bottles</td></tr>
+              <tr><td>22.5 – &lt;30</td><td class="num">65</td><td>Car batteries, packaged tools</td></tr>
+              <tr><td>15 – &lt;22.5</td><td class="num">70</td><td>Auto parts, cabinets</td></tr>
+              <tr><td>13.5 – &lt;15</td><td class="num">77.5</td><td>Tires, bagged flour</td></tr>
+              <tr><td>12 – &lt;13.5</td><td class="num">85</td><td>Crated machinery, plumbing fixtures</td></tr>
+              <tr><td>10.5 – &lt;12</td><td class="num">92.5</td><td>Computer boxes, small appliances</td></tr>
+              <tr><td>9 – &lt;10.5</td><td class="num">100</td><td>Wine cases, boxed goods on pallet</td></tr>
+              <tr><td>8 – &lt;9</td><td class="num">110</td><td>Cabinets partially full</td></tr>
+              <tr><td>7 – &lt;8</td><td class="num">125</td><td>Small appliances loose, some furniture</td></tr>
+              <tr><td>6 – &lt;7</td><td class="num">150</td><td>Auto sheet metal, furniture</td></tr>
+              <tr><td>5 – &lt;6</td><td class="num">175</td><td>Clothing, couches, stuffed furniture</td></tr>
+              <tr><td>4 – &lt;5</td><td class="num">200</td><td>Aircraft parts, aluminum tables</td></tr>
+              <tr><td>3 – &lt;4</td><td class="num">250</td><td>Bamboo furniture, mattresses</td></tr>
+              <tr><td>2 – &lt;3</td><td class="num">300</td><td>Wood cabinets, tables/chairs setup</td></tr>
+              <tr><td>1 – &lt;2</td><td class="num">400</td><td>Deer antlers, empty cases</td></tr>
+              <tr><td>&lt; 1</td><td class="num">500</td><td>Bags of gold dust (illustrative), ping-pong balls</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Examples are illustrative only. Actual assignment depends on the NMFC item number when one exists — this table shows the density fallback.</p>
+      </section>
+
+      <AdSlot size="leaderboard" />
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">How to determine your class</h2>
+        <ol class="list-decimal list-inside space-y-2 text-[var(--color-text-muted)]">
+          <li>Identify whether your commodity has a specific NMFC item. Ask your carrier (fastest, free) or subscribe to ClassIT. See our <a href="/nmfc-codes-explained">NMFC guide</a>.</li>
+          <li>If an NMFC item applies, use its class. Density calculation is not required.</li>
+          <li>If no NMFC item applies, or the item is "subject to density," compute density with our <a href="/">freight class calculator</a> or <a href="/freight-density-calculator">density calculator</a>. Use the outermost dimensions — pallet + overhang + deck height.</li>
+          <li>Rate the shipment against the class from step 2 or 3.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">How to lower your class (legitimately)</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">If your class is density-based, increasing your effective density lowers your class:</p>
+        <ul class="space-y-2 text-[var(--color-text-muted)] mt-2">
+          <li><strong>Pack tighter.</strong> Remove void fill and use right-sized cartons.</li>
+          <li><strong>Right-size the pallet.</strong> A 42×42 or custom skid may beat a 48×40 for a small product.</li>
+          <li><strong>Reduce pallet deck height where safe.</strong> A 3–4″ economy pallet vs a 6″ GMA can move you a bucket.</li>
+          <li><strong>Consolidate lightweight lines onto one pallet.</strong> The <a href="/">freight class calculator</a> flags these opportunities automatically.</li>
+          <li><strong>Never fudge the numbers.</strong> Carriers inspect. A cheap declared class produces a reclassification invoice plus a penalty.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Freight class vs dim weight</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">Freight class governs LTL. Dimensional weight governs <em>parcel</em> — the small-package world of FedEx, UPS, USPS, and DHL. Both concepts penalize low-density freight; they use different math. LTL uses density → class → rate/cwt; parcel uses dim-divisor → dim weight → rate. See our <a href="/dimensional-weight-calculator">dim weight calculator</a> for the parcel side.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Common misconceptions</h2>
+        <ul class="space-y-2 text-[var(--color-text-muted)]">
+          <li><strong>"Higher class means better service."</strong> No — it just means a higher rate tier. Class does not affect priority.</li>
+          <li><strong>"I can pick any class as long as I pay something."</strong> Carriers inspect. Declaring a lower class than warranted produces a correction invoice.</li>
+          <li><strong>"Class is per shipment."</strong> No — per line item on the BOL. A mixed shipment often has multiple classes.</li>
+          <li><strong>"NMFC and class are the same thing."</strong> NMFC is the commodity item number; class is the rate tier. Multiple NMFC items can share a class; NMFC governs when it exists.</li>
+        </ul>
+      </section>
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/what-is-freight-class" />
+  </main>
+  <SiteFooter />
+</BaseLayout>

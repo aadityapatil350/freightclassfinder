@@ -1,0 +1,32 @@
+---
+export interface Props {
+  current: string;
+}
+const { current } = Astro.props;
+
+const tools = [
+  { href: '/',                              label: 'Freight Class Calculator',      description: 'Density-based class, per line + shipment aggregate' },
+  { href: '/freight-density-calculator',    label: 'Freight Density Calculator',    description: 'Compute lb/ft³ from dimensions and weight' },
+  { href: '/dimensional-weight-calculator', label: 'Dimensional Weight Calculator', description: 'Parcel dim weight and billable weight' },
+  { href: '/pallet-calculator',             label: 'Pallet Calculator',             description: 'Boxes per pallet — both orientations' },
+  { href: '/freight-rate-calculator',       label: 'Freight Rate Estimator',        description: 'Rough LTL rate from class and weight' },
+  { href: '/fuel-surcharge-calculator',     label: 'Fuel Surcharge Calculator',     description: 'Percentage from DOE diesel price' },
+  { href: '/cost-per-mile-calculator',      label: 'Cost per Mile Calculator',      description: 'Operating cost for trucking' },
+];
+
+const related = tools.filter(t => t.href !== current).slice(0, 6);
+---
+<section class="mt-12 pt-8 border-t border-[var(--color-border)]">
+  <h2 class="text-xl font-semibold text-[var(--color-text)] mb-4">Related Tools</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+    {related.map(tool => (
+      <a
+        href={tool.href}
+        class="block rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-4 hover:border-[var(--color-accent)] transition-colors no-underline"
+      >
+        <div class="font-medium text-[var(--color-accent)]">{tool.label}</div>
+        <div class="text-sm text-[var(--color-text-muted)] mt-0.5">{tool.description}</div>
+      </a>
+    ))}
+  </div>
+</section>

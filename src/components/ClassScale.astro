@@ -1,0 +1,72 @@
+---
+// Visual density scale — SVG, no charting library.
+export interface Props {
+  density?: number | null;
+  targetClass?: number | null;
+  id?: string;
+}
+const { density, targetClass, id = 'class-scale' } = Astro.props;
+---
+<div class="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-4" data-density-scale id={id}>
+  <div class="flex items-center justify-between mb-2 text-xs text-[var(--color-text-muted)]">
+    <span>Denser · Class 50</span>
+    <span>Less dense · Class 500</span>
+  </div>
+  <svg viewBox="0 0 400 40" width="100%" height="40" class="block" role="img" aria-label="Density scale with marker">
+    <defs>
+      <linearGradient id="scaleGrad" x1="0" x2="1">
+        <stop offset="0%" stop-color="#16a34a"/>
+        <stop offset="50%" stop-color="#eab308"/>
+        <stop offset="100%" stop-color="#dc2626"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="14" width="400" height="12" rx="6" fill="url(#scaleGrad)"/>
+    <g id={id + '-ticks'}>
+      <line x1="0"   y1="10" x2="0"   y2="30" stroke="#64748b" stroke-width="1"/>
+      <line x1="100" y1="10" x2="100" y2="30" stroke="#64748b" stroke-width="1"/>
+      <line x1="200" y1="10" x2="200" y2="30" stroke="#64748b" stroke-width="1"/>
+      <line x1="300" y1="10" x2="300" y2="30" stroke="#64748b" stroke-width="1"/>
+      <line x1="400" y1="10" x2="400" y2="30" stroke="#64748b" stroke-width="1"/>
+    </g>
+    <g id={id + '-marker'} style="display:none">
+      <polygon points="0,4 -6,-2 6,-2" fill="#0f172a" transform="translate(0,10)"/>
+    </g>
+  </svg>
+  <div class="flex justify-between mt-1 text-[10px] text-[var(--color-text-subtle)]">
+    <span>50 lb/ft³</span><span>25</span><span>12</span><span>6</span><span>0</span>
+  </div>
+  <p class="mt-3 text-sm text-[var(--color-text-muted)]" data-scale-caption>Enter dimensions and weight to see your density marker.</p>
+</div>
+
+<script define:vars={{ id, initialDensity: density ?? null }}>
+  // Marker position on a log-ish scale so the busy 1-15 lb/ft³ range spreads out.
+  const el = document.getElementById(id);
+  if (el) {
+    const markerG = document.getElementById(id + '-marker');
+    const caption = el.querySelector('[data-scale-caption]');
+
+    // Map density to x-position [0, 400] where 0 = 50+ lb/ft³ (dense), 400 = 0 (fluffy).
+    function xFor(d) {
+      const clamped = Math.max(0.5, Math.min(50, d));
+      // log-scale so mid-range is legible
+      const logMax = Math.log(50);
+      const logMin = Math.log(0.5);
+      const t = (Math.log(clamped) - logMin) / (logMax - logMin);
+      return 400 - t * 400;
+    }
+
+    window.updateDensityScale = function (d, cls) {
+      if (!isFinite(d) || d <= 0) {
+        markerG.style.display = 'none';
+        caption.textContent = 'Enter dimensions and weight to see your density marker.';
+        return;
+      }
+      const x = xFor(d);
+      markerG.setAttribute('transform', `translate(${x},0)`);
+      markerG.style.display = '';
+      caption.textContent = `Density ${d.toFixed(2)} lb/ft³ · Class ${cls}`;
+    };
+
+    if (initialDensity) window.updateDensityScale(initialDensity);
+  }
+</script>

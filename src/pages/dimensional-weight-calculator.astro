@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://freightclassfinder.com/dimensional-weight-calculator';
+const webAppSchema = {
+  "@context": "https://schema.org", "@type": "WebApplication",
+  "name": "Dimensional Weight Calculator", "url": pageUrl,
+  "applicationCategory": "BusinessApplication", "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const faqs = [
+  { q: "What is dimensional weight?", a: "Dimensional (or volumetric) weight is a pricing formula that lets carriers bill for the space a package occupies when it is bulky but light. Billable weight = max(actual weight, dim weight)." },
+  { q: "How do you calculate dim weight?", a: "Dim weight = (L × W × H in inches) ÷ dim divisor. Common divisors are 139 for FedEx and UPS domestic/international, and 166 for USPS Priority. Divisors are set annually; check your carrier's current rate card." },
+  { q: "Why did my package cost more than expected?", a: "Almost always because the dim weight exceeded the actual weight. A 12×12×12 box weighing 3 lb has a dim weight of 1728 ÷ 139 = 12.4 lb — you get billed as if it were 12.4 lb." },
+  { q: "Does dim weight apply to LTL freight?", a: "LTL uses density-based freight class instead. Dim weight is a parcel concept. For LTL, use the freight class calculator." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": faqs.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+---
+<BaseLayout
+  title="Dimensional Weight Calculator – FedEx, UPS, USPS, DHL"
+  description="Free dimensional weight calculator. Enter package dimensions and actual weight; get dim weight and billable weight for FedEx, UPS, USPS, and DHL divisors."
+  canonical={pageUrl}
+  schema={[webAppSchema, faqSchema]}
+>
+  <SiteHeader current="/dimensional-weight-calculator" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-2">Dimensional Weight Calculator</h1>
+    <p class="text-[var(--color-text-muted)] mb-6">Enter package dimensions and actual weight to compute dim weight and billable weight for major carriers.</p>
+
+    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div><label class="block text-sm mb-1">Length (in)</label><input id="l" type="number" value="18" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Width (in)</label><input id="w" type="number" value="14" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Height (in)</label><input id="h" type="number" value="12" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Actual weight (lb)</label><input id="wt" type="number" value="5" step="any" min="0"/></div>
+      </div>
+
+      <div class="mt-4">
+        <label class="block text-sm mb-1">Carrier / Divisor</label>
+        <select id="carrier"></select>
+      </div>
+
+      <div class="mt-5 rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-4 space-y-2">
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">Volume (in³)</span><span id="r-vol" class="font-medium">—</span></div>
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">Dim weight</span><span id="r-dim" class="font-medium">—</span></div>
+        <div class="flex justify-between border-t border-[var(--color-result-border)] pt-2"><span class="text-sm">Billable weight</span><span id="r-bill" class="text-2xl font-bold text-[var(--color-accent)]">—</span></div>
+      </div>
+    </div>
+
+    <p class="mt-4 text-xs text-[var(--color-text-subtle)]">Carrier divisors as of 2026-08-31. Carriers update these periodically; verify against your current rate card. This tool has no affiliation with FedEx, UPS, USPS, or DHL.</p>
+
+    <AdSlot size="leaderboard" />
+
+    <article class="space-y-6">
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Dim Weight Formula</h2>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm">
+          Dim weight (lb) = (L × W × H in inches) ÷ divisor<br/>
+          Billable weight = max(actual, dim)
+        </div>
+        <p class="text-[var(--color-text-muted)] mt-2">A 20×15×12 package (3,600 in³) at 4 lb, with a 139 divisor: dim = 3,600 ÷ 139 = 25.9 lb. You pay for 25.9 lb, not 4 lb.</p>
+      </section>
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Common divisors — as of 2026-08-31</h2>
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>Carrier</th><th class="num">Divisor</th></tr></thead>
+            <tbody>
+              <tr><td>FedEx / UPS — US domestic</td><td class="num">139</td></tr>
+              <tr><td>FedEx / UPS — international</td><td class="num">139</td></tr>
+              <tr><td>DHL — worldwide</td><td class="num">139</td></tr>
+              <tr><td>USPS Priority Mail (zones ≥ 4, over 1 ft³)</td><td class="num">166</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Divisors change; re-verify annually. Sources: carrier public rate guides, 2026.</p>
+      </section>
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/dimensional-weight-calculator" />
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+  import { dimensionalWeight, billableWeight } from '../lib/freight-math.js';
+  import { DIM_DIVISORS } from '../data/density-classes.js';
+  const $ = (id) => document.getElementById(id);
+  const sel = $('carrier');
+  sel.innerHTML = DIM_DIVISORS.map(d => `<option value="${d.divisor}">${d.label} (÷${d.divisor})</option>`).join('');
+
+  function update() {
+    const l = Number($('l').value), w = Number($('w').value), h = Number($('h').value), wt = Number($('wt').value), div = Number(sel.value);
+    try {
+      const vol = l * w * h;
+      const dim = dimensionalWeight(l, w, h, div);
+      const bill = billableWeight(wt, dim);
+      $('r-vol').textContent = vol.toLocaleString() + ' in³';
+      $('r-dim').textContent = dim.toFixed(2) + ' lb';
+      $('r-bill').textContent = bill.toFixed(2) + ' lb';
+    } catch { $('r-vol').textContent = '—'; $('r-dim').textContent = '—'; $('r-bill').textContent = '—'; }
+  }
+  document.querySelectorAll('#l, #w, #h, #wt, #carrier').forEach(el => el.addEventListener('input', update));
+  update();
+</script>

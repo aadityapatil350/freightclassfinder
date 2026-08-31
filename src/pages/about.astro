@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+const pageUrl = 'https://freightclassfinder.com/about';
+---
+<BaseLayout title="About FreightClassFinder.com" description="Independent freight classification calculators and honest explainers. All math runs in your browser; no data collection." canonical={pageUrl}>
+  <SiteHeader current="/about" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10 prose-section">
+    <h1 class="text-3xl font-bold mb-4">About</h1>
+    <p class="text-[var(--color-text-muted)]">FreightClassFinder.com is an independent set of freight calculators and honest explainers for LTL shippers, brokers, warehouse staff, and small e-commerce operators who need a straight answer without a signup form or a sales call.</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">What makes this different</h2>
+    <ul class="space-y-2 text-[var(--color-text-muted)] mt-2">
+      <li><strong>Multi-item shipments</strong> — real LTL loads have several pallets. Every calculator treats them properly, per line, the way carriers actually rate.</li>
+      <li><strong>Pallet-aware dimensions</strong> — we measure the way the carrier's cube meter does: pallet footprint, overhang, deck height.</li>
+      <li><strong>Breakpoint optimizer</strong> — see exactly how far you are from the next cheaper class, and how much margin you have before a reclassification risk.</li>
+      <li><strong>Honest on NMFC</strong> — we don't pretend to have a lookup we don't have the rights to. The <a href="/nmfc-codes-explained">NMFC guide</a> explains how to get a code legitimately.</li>
+      <li><strong>Everything client-side</strong> — the calculators run in your browser. Nothing you enter is transmitted or stored.</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">Who runs it</h2>
+    <p class="text-[var(--color-text-muted)]">A small independent team that also runs a handful of other single-purpose micro-tool sites. We're not a broker, a carrier, or a TMS vendor. We don't sell freight services. This means we can afford to publish tools that tell you the truth even when the truth is "call your carrier."</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">How we make money</h2>
+    <p class="text-[var(--color-text-muted)]">Display ads on the calculator pages (once approved by Google AdSense). No lead-gen forms, no data brokering, no affiliate links to carriers.</p>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">Feedback</h2>
+    <p class="text-[var(--color-text-muted)]">Errors? Suggestions? A missing feature? Use the <a href="/contact">contact page</a>.</p>
+  </main>
+  <SiteFooter />
+</BaseLayout>

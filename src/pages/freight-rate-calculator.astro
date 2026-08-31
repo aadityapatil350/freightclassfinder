@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://freightclassfinder.com/freight-rate-calculator';
+const webAppSchema = {
+  "@context": "https://schema.org", "@type": "WebApplication",
+  "name": "Freight Rate Calculator", "url": pageUrl,
+  "applicationCategory": "BusinessApplication", "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const faqs = [
+  { q: "How is a freight rate calculated?", a: "Base rate is roughly weight (in hundredweight / cwt) × the class rate per cwt for your origin-destination pair, then discounted by your negotiated tariff percentage. Fuel surcharge and accessorials are added on top. This tool is a rough estimator only — actual rates come from your carrier or broker." },
+  { q: "What is CWT?", a: "CWT = hundredweight = 100 lb. Class rates are usually quoted per CWT. A shipment of 1,500 lb is 15 CWT." },
+  { q: "Why isn't there a fixed rate per class?", a: "LTL pricing varies by carrier, lane, tariff, discount schedule, minimum charges, and fuel. There is no single national rate table. Use this calculator to sanity-check quotes, not to bind a rate." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": faqs.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+---
+<BaseLayout
+  title="Freight Rate Calculator – LTL Estimate, Free"
+  description="Free freight rate estimator: weight × cwt rate, tariff discount, fuel surcharge, and minimum charge. For sanity-checking LTL quotes."
+  canonical={pageUrl}
+  schema={[webAppSchema, faqSchema]}
+>
+  <SiteHeader current="/freight-rate-calculator" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-2">Freight Rate Calculator</h1>
+    <p class="text-[var(--color-text-muted)] mb-6">Rough LTL rate estimate from weight, class rate per cwt, tariff discount, fuel surcharge and minimum charge. For sanity checks — not a binding quote.</p>
+
+    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm">
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="block text-sm mb-1">Weight (lb)</label><input id="wt" type="number" value="1500" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Class rate ($/cwt)</label><input id="rate" type="number" value="45" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Tariff discount (%)</label><input id="disc" type="number" value="65" step="any" min="0" max="100"/></div>
+        <div><label class="block text-sm mb-1">Fuel surcharge (%)</label><input id="fsc" type="number" value="28" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Minimum charge ($)</label><input id="minc" type="number" value="120" step="any" min="0"/></div>
+        <div><label class="block text-sm mb-1">Accessorials ($)</label><input id="acc" type="number" value="0" step="any" min="0"/></div>
+      </div>
+
+      <div class="mt-5 rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-4 space-y-2">
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">Gross ratable charge</span><span id="r-gross" class="font-medium">—</span></div>
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">After discount</span><span id="r-disc" class="font-medium">—</span></div>
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">Fuel surcharge</span><span id="r-fsc" class="font-medium">—</span></div>
+        <div class="flex justify-between"><span class="text-sm text-[var(--color-text-muted)]">Line-haul (max of above or min charge)</span><span id="r-lh" class="font-medium">—</span></div>
+        <div class="flex justify-between border-t border-[var(--color-result-border)] pt-2"><span class="text-sm">Estimated total</span><span id="r-total" class="text-2xl font-bold text-[var(--color-accent)]">—</span></div>
+      </div>
+    </div>
+
+    <AdSlot size="leaderboard" />
+
+    <article class="space-y-6">
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">The Formula</h2>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm">
+          gross = (weight ÷ 100) × cwt_rate<br/>
+          after_disc = gross × (1 − discount%)<br/>
+          fuel = after_disc × fsc%<br/>
+          line_haul = max(after_disc + fuel, min_charge)<br/>
+          total = line_haul + accessorials
+        </div>
+      </section>
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Why this is an estimate</h2>
+        <p class="text-[var(--color-text-muted)]">Carriers publish base tariffs (CzarLite, SMC3, or proprietary), then apply your negotiated discount and a fuel surcharge tied to the DOE diesel index. Accessorials — liftgate, residential, inside delivery, notification — stack on top. Bind rates through a carrier, TMS, or broker quote.</p>
+      </section>
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/freight-rate-calculator" />
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  function fmt(v) { return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function update() {
+    const wt = Number($('wt').value), rate = Number($('rate').value), disc = Number($('disc').value) / 100, fsc = Number($('fsc').value) / 100, minc = Number($('minc').value), acc = Number($('acc').value);
+    if (wt <= 0 || rate <= 0) { ['r-gross','r-disc','r-fsc','r-lh','r-total'].forEach(i => $(i).textContent = '—'); return; }
+    const gross = (wt / 100) * rate;
+    const afterDisc = gross * (1 - disc);
+    const fuel = afterDisc * fsc;
+    const lh = Math.max(afterDisc + fuel, minc);
+    const total = lh + acc;
+    $('r-gross').textContent = fmt(gross);
+    $('r-disc').textContent = fmt(afterDisc);
+    $('r-fsc').textContent = fmt(fuel);
+    $('r-lh').textContent = fmt(lh);
+    $('r-total').textContent = fmt(total);
+  }
+  document.querySelectorAll('#wt,#rate,#disc,#fsc,#minc,#acc').forEach(el => el.addEventListener('input', update));
+  update();
+</script>

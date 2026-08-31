@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://freightclassfinder.com/bill-of-lading-guide';
+const articleSchema = {
+  "@context": "https://schema.org", "@type": "Article",
+  "headline": "Bill of Lading Guide: What It Is, How to Fill One Out",
+  "url": pageUrl,
+  "author": { "@type": "Organization", "name": "FreightClassFinder.com" },
+  "datePublished": "2026-08-31",
+};
+
+const faqs = [
+  { q: "What is a bill of lading?", a: "A bill of lading (BOL) is a legal document between the shipper and the carrier. It acts as a receipt for the goods, a contract of carriage, and — when negotiable — a document of title." },
+  { q: "Who fills out a bill of lading?", a: "The shipper typically fills out the BOL and hands it to the carrier at pickup. The carrier signs to acknowledge receipt. Many shippers use a TMS or the carrier's online portal to generate the document." },
+  { q: "What information goes on a BOL?", a: "Shipper name and address, consignee name and address, third-party billing party if any, PRO number, description of goods, weight, dimensions, freight class, NMFC item number, special instructions, and signatures at pickup and delivery." },
+  { q: "What is a straight bill of lading?", a: "A non-negotiable BOL that names a specific consignee. Ownership of the goods is not transferable via the document. The alternative is an order (negotiable) BOL." },
+  { q: "Is an electronic BOL legal?", a: "Yes in the US. UETA and E-SIGN grant electronic BOLs the same legal effect as paper. Most large carriers accept eBOL through their portals or via API." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": faqs.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+---
+<BaseLayout
+  title="Bill of Lading Guide – What It Is, How to Fill One Out"
+  description="Complete bill of lading guide: purpose, types (straight, order, master, house), required fields, common mistakes, and how the BOL interacts with freight class."
+  canonical={pageUrl}
+  schema={[articleSchema, faqSchema]}
+>
+  <SiteHeader current="/bill-of-lading-guide" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-3">Bill of Lading Guide</h1>
+    <p class="text-[var(--color-text-muted)] mb-6">The single most important document in a freight shipment. What it is, what belongs on it, how to avoid the mistakes that cost you money.</p>
+
+    <article class="space-y-8 text-[var(--color-text)]">
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Three roles in one document</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">A Bill of Lading (BOL, sometimes written BoL or B/L) plays three legal roles at once:</p>
+        <ol class="list-decimal list-inside space-y-1 text-[var(--color-text-muted)] mt-2">
+          <li><strong>Receipt for the goods.</strong> The carrier signs at pickup to acknowledge what was tendered and its condition.</li>
+          <li><strong>Contract of carriage.</strong> The BOL and its terms constitute the contract between shipper and carrier.</li>
+          <li><strong>Document of title</strong> (when negotiable). The holder of an order BOL can transfer ownership of the goods to another party.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Types of BOL</h2>
+        <ul class="space-y-2 text-[var(--color-text-muted)]">
+          <li><strong>Straight BOL</strong> — non-negotiable, names a specific consignee. Most common in domestic LTL.</li>
+          <li><strong>Order BOL</strong> — negotiable; can be endorsed like a check. Used when payment is contingent on delivery (letters of credit).</li>
+          <li><strong>Master BOL (MBL)</strong> — issued by the underlying carrier (ocean, air) to a freight forwarder for a container's worth of freight.</li>
+          <li><strong>House BOL (HBL)</strong> — issued by a freight forwarder to individual shippers whose cargo is inside a consolidated container.</li>
+          <li><strong>VICS BOL</strong> — the industry-standard template published by the Voluntary Interindustry Commerce Standards association. Widely used in domestic LTL.</li>
+          <li><strong>Electronic BOL (eBOL)</strong> — digital version, legally equivalent under E-SIGN/UETA.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Required fields on an LTL BOL</h2>
+        <ol class="list-decimal list-inside space-y-2 text-[var(--color-text-muted)]">
+          <li><strong>Shipper</strong> — name, full address, contact.</li>
+          <li><strong>Consignee</strong> — name, full address, contact.</li>
+          <li><strong>Third-party billing</strong> — name and address if a third party pays.</li>
+          <li><strong>Bill of lading number</strong> — your internal reference.</li>
+          <li><strong>PRO number</strong> — the carrier-assigned tracking number (added by carrier at pickup).</li>
+          <li><strong>Special instructions</strong> — hazmat, temperature, "do not stack," appointment required.</li>
+          <li><strong>Goods description</strong> — clear plain English, one line per NMFC/class combination.</li>
+          <li><strong>Handling units</strong> — count and type (skid, pallet, drum, tote).</li>
+          <li><strong>Weight</strong> — actual weight per line.</li>
+          <li><strong>NMFC item number and class</strong> — see our <a href="/nmfc-codes-explained">NMFC guide</a> and <a href="/what-is-freight-class">freight class guide</a>.</li>
+          <li><strong>Declared value</strong> — for high-value shipments where the released-value default is inadequate.</li>
+          <li><strong>Signature — shipper</strong> — attests to accuracy.</li>
+          <li><strong>Signature — carrier</strong> — acknowledges receipt.</li>
+          <li><strong>Signature — consignee</strong> — signed at delivery, noting any damage or shortage.</li>
+        </ol>
+      </section>
+
+      <AdSlot size="leaderboard" />
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Where BOLs get shippers in trouble</h2>
+        <ul class="space-y-2 text-[var(--color-text-muted)]">
+          <li><strong>Wrong weight.</strong> Carriers re-weigh. A 5% understatement triggers a correction plus a re-weigh fee.</li>
+          <li><strong>Wrong dimensions.</strong> Same as weight; the cube meter at the terminal doesn't lie.</li>
+          <li><strong>Wrong or missing NMFC.</strong> Reclassification is the most expensive correction. Get the item right up front.</li>
+          <li><strong>Vague goods description.</strong> "Freight" or "Machinery parts" invites the carrier to classify pessimistically.</li>
+          <li><strong>Signing the delivery receipt clean when there's damage.</strong> Sign "damaged — count/inspection required" and note the specifics. Signing clean waives most claim rights.</li>
+          <li><strong>Not keeping a signed copy.</strong> The signed pickup BOL is your leverage in any dispute. Photograph it if paper.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">BOL and freight class</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">The BOL is where your freight class becomes contractually binding. Every line on the BOL should reflect the actual class of that line item — carriers rate each line separately, so combining unlike products under one line to game the class rarely works and usually triggers correction.</p>
+        <p class="leading-relaxed text-[var(--color-text-muted)] mt-2">If you're using our <a href="/">freight class calculator</a> to plan a shipment, the per-line output is what belongs on the BOL. The aggregate figure is informational only.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">A minimal BOL checklist you can print</h2>
+        <ul class="space-y-1 text-[var(--color-text-muted)]">
+          <li>☐ Shipper, consignee, third-party addresses complete</li>
+          <li>☐ Every handling unit accounted for with count and type</li>
+          <li>☐ Weight per line, matched to a certified scale reading</li>
+          <li>☐ Dimensions per line, matched to a tape or cube meter</li>
+          <li>☐ NMFC item and class per line, confirmed with the carrier if in doubt</li>
+          <li>☐ Special instructions listed prominently</li>
+          <li>☐ Declared value if above the released-value default</li>
+          <li>☐ Signatures at pickup and (later) at delivery, damage noted if any</li>
+          <li>☐ Copy retained in your records</li>
+        </ul>
+      </section>
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/bill-of-lading-guide" />
+  </main>
+  <SiteFooter />
+</BaseLayout>

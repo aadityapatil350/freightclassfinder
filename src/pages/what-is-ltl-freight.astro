@@ -1,0 +1,139 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://freightclassfinder.com/what-is-ltl-freight';
+const articleSchema = {
+  "@context": "https://schema.org", "@type": "Article",
+  "headline": "What is LTL Freight? The Complete Guide",
+  "url": pageUrl,
+  "author": { "@type": "Organization", "name": "FreightClassFinder.com" },
+  "datePublished": "2026-08-31",
+};
+
+const faqs = [
+  { q: "What does LTL mean in trucking?", a: "LTL means less-than-truckload — freight shipments that occupy only part of a trailer, combined with other shippers' freight to fill the trailer. Typical weight range is 150 to 15,000 lb." },
+  { q: "What is less than truckload?", a: "Less-than-truckload (LTL) is a mode of shipping where multiple shippers' cargo shares a trailer. Carriers pick up, consolidate at a terminal, line-haul to a destination terminal, then deliver to the final consignee." },
+  { q: "What are LTL shipments?", a: "LTL shipments are palletized freight that's too big for parcel (over ~150 lb or oversize) but too small to fill a truck. They're rated by weight, dimensions and freight class." },
+  { q: "What does LTL stand for in shipping?", a: "LTL stands for Less-Than-Truckload." },
+  { q: "When should I use LTL vs FTL?", a: "Use LTL when you have 1–6 pallets or less than about 10,000 lb. Use FTL (full truckload) when you have more than 12–14 pallets, when your cargo is time-sensitive, or when handling touchpoints (LTL cross-docks 2–4 times) would risk damage." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": faqs.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+---
+<BaseLayout
+  title="What is LTL Freight? The Complete Guide"
+  description="LTL (less-than-truckload) explained: definition, how the hub-and-spoke network works, when to use LTL vs FTL, common services, and how to choose an LTL carrier."
+  canonical={pageUrl}
+  schema={[articleSchema, faqSchema]}
+>
+  <SiteHeader current="/what-is-ltl-freight" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-3">What is LTL Freight?</h1>
+    <p class="text-[var(--color-text-muted)] mb-6">Complete guide to Less-Than-Truckload shipping: the definition, how it works, when to use it instead of parcel or full truckload, and how carriers price it.</p>
+
+    <article class="space-y-8 text-[var(--color-text)]">
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">LTL, in one paragraph</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">LTL (less-than-truckload) is the shipping mode used when a shipper's freight is too large for parcel carriers like UPS or FedEx Ground but too small to justify a dedicated truck. Multiple shippers' pallets share one trailer. LTL carriers operate <strong>hub-and-spoke networks</strong>: local pickup trucks bring freight to an origin terminal, line-haul tractors move consolidated trailers between terminals, and delivery trucks drop off at the destination. Freight is typically handled 2–4 times end to end.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Typical LTL profile</h2>
+        <ul class="space-y-2 text-[var(--color-text-muted)]">
+          <li><strong>Weight:</strong> 150 lb to 15,000 lb per shipment</li>
+          <li><strong>Handling units:</strong> 1 to about 10 pallets, though hard caps vary by carrier</li>
+          <li><strong>Transit time:</strong> 1 to 5 business days for most US lanes; longer with cross-border or extended service areas</li>
+          <li><strong>Rating basis:</strong> weight (per hundredweight) × class rate × discount, then fuel and accessorials</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">LTL carrier types</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)] mb-2">The industry is not monolithic. Understand the four broad shapes before picking a partner:</p>
+        <ul class="space-y-2 text-[var(--color-text-muted)]">
+          <li><strong>National LTL carriers</strong> operate coast-to-coast with hundreds of terminals. Predictable transit, published tariffs, best for wide-lane B2B shipping.</li>
+          <li><strong>Regional LTL carriers</strong> serve a defined multi-state area with faster transit and often better damage rates. Great for high-volume shippers in one region.</li>
+          <li><strong>Specialized LTL carriers</strong> handle temperature-controlled, hazmat, oversized/overweight, high-value or trade-show freight. Higher rates but capabilities national LTL cannot match.</li>
+          <li><strong>Freight brokers / 3PLs</strong> resell carrier capacity, negotiate discounts on your behalf, and provide a single interface to many carriers. Useful for small volumes.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">How LTL pricing works</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">LTL pricing is a stack of components. In order of contribution to your bill:</p>
+        <ol class="list-decimal list-inside space-y-2 text-[var(--color-text-muted)] mt-2">
+          <li><strong>Base tariff</strong> — a published rate table (CzarLite, SMC3, or the carrier's own) that gives a $/hundredweight for every class-mileage combination.</li>
+          <li><strong>Discount</strong> — your negotiated percentage off the base tariff. 55–75% is typical for mid-volume shippers.</li>
+          <li><strong>Freight class</strong> — see our <a href="/what-is-freight-class">freight class guide</a>. Higher class = higher rate per cwt.</li>
+          <li><strong>Weight and dimensions</strong> — heavier shipments in the same class get better rates per pound; cubic capacity and linear-foot rules may apply if you're low-density.</li>
+          <li><strong>Fuel surcharge</strong> — a percentage of the line-haul, tied to the DOE weekly diesel index. See our <a href="/fuel-surcharge-calculator">fuel surcharge calculator</a>.</li>
+          <li><strong>Accessorials</strong> — liftgate, residential delivery, inside delivery, notification/appointment, limited access. Stack quickly.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">When to use LTL vs alternatives</h2>
+        <div class="overflow-x-auto">
+          <table class="data-table mt-2">
+            <thead><tr><th>Situation</th><th>Best mode</th></tr></thead>
+            <tbody>
+              <tr><td>Under 150 lb, box-sized</td><td>Parcel (UPS, FedEx)</td></tr>
+              <tr><td>150 – 15,000 lb, 1–10 pallets</td><td>LTL</td></tr>
+              <tr><td>15,000+ lb or 12+ pallets</td><td>FTL</td></tr>
+              <tr><td>Time-critical, damage-sensitive</td><td>FTL or dedicated</td></tr>
+              <tr><td>Same-day / next-day metro</td><td>Cartage or expedited</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <AdSlot size="leaderboard" />
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Common LTL accessorials</h2>
+        <ul class="space-y-2 text-[var(--color-text-muted)]">
+          <li><strong>Liftgate</strong> — required when the pickup or delivery site has no dock. Typical $75–$150 each.</li>
+          <li><strong>Residential</strong> — extra fee for delivery to a home address. Assume $100–$200.</li>
+          <li><strong>Inside delivery</strong> — driver moves freight past the threshold. Often $75–$150.</li>
+          <li><strong>Notification / appointment</strong> — carrier calls ahead and schedules. Modest fee, essential for retail deliveries.</li>
+          <li><strong>Limited access</strong> — schools, churches, construction sites, farms. Automatic surcharge.</li>
+          <li><strong>Reweigh / reclass fee</strong> — carrier corrects your BOL after inspection. Expensive; the fee is on top of the class differential.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">Choosing an LTL carrier</h2>
+        <p class="leading-relaxed text-[var(--color-text-muted)]">Rate is the loudest signal but rarely the most important. Prioritize this way:</p>
+        <ol class="list-decimal list-inside space-y-2 text-[var(--color-text-muted)] mt-2">
+          <li><strong>Coverage of your lanes.</strong> A regional carrier will always beat a national on in-region shipments.</li>
+          <li><strong>Damage-free rate.</strong> Ask for the carrier's OS&D (over, short, damaged) percentage. Under 1% is good; over 3% is a red flag.</li>
+          <li><strong>On-time performance.</strong> Ask for their on-time delivery percentage on your lanes.</li>
+          <li><strong>Claims process.</strong> Fast, clean claims payments beat a small rate advantage.</li>
+          <li><strong>Then price.</strong></li>
+        </ol>
+        <p class="leading-relaxed text-[var(--color-text-muted)] mt-2">If you tender freight through a broker or 3PL, most of the above becomes their job — but ask them to name the underlying carrier before you accept a load tender so you can vet the actual hauler.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-2">LTL best-practice checklist</h2>
+        <ul class="space-y-2 text-[var(--color-text-muted)]">
+          <li>Weigh every shipment on a certified scale. Guessed weights are the #1 cause of corrections.</li>
+          <li>Measure the outermost extremes — pallet + overhang + deck height. See our <a href="/">freight class calculator</a>.</li>
+          <li>Use a stretch-wrapped, stackable pallet whenever possible.</li>
+          <li>Label every handling unit clearly with origin, destination, and PRO number space.</li>
+          <li>Get the correct NMFC item on the BOL — see our <a href="/nmfc-codes-explained">NMFC guide</a>.</li>
+          <li>Photograph the load before pickup. Documentation matters for OS&D claims.</li>
+        </ul>
+      </section>
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/what-is-ltl-freight" />
+  </main>
+  <SiteFooter />
+</BaseLayout>

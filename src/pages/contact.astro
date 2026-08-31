@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+const pageUrl = 'https://freightclassfinder.com/contact';
+---
+<BaseLayout title="Contact FreightClassFinder.com" description="Contact the FreightClassFinder team. Corrections, feedback, and feature requests welcome." canonical={pageUrl}>
+  <SiteHeader current="/contact" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10 prose-section">
+    <h1 class="text-3xl font-bold mb-4">Contact</h1>
+    <p class="text-[var(--color-text-muted)]">Email: <a href="mailto:hello@freightclassfinder.com">hello@freightclassfinder.com</a></p>
+    <p class="text-[var(--color-text-muted)] mt-3">Corrections, feature requests, or feedback on the tools — always welcome. If you spot a math error or an out-of-date carrier divisor, please include the source you're citing so we can update the reference in-code.</p>
+    <p class="text-[var(--color-text-muted)] mt-3">We do not respond to freight rate quotes, brokerage inquiries, or classification lookups for specific shipments. For those, contact your carrier or freight broker directly.</p>
+  </main>
+  <SiteFooter />
+</BaseLayout>
