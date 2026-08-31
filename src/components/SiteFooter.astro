@@ -1,12 +1,12 @@
 ---
 const year = new Date().getFullYear();
 ---
-<footer class="border-t border-[var(--color-border)] bg-[var(--color-bg-subtle)] mt-16">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-6 text-sm">
+<footer class="border-t border-[var(--color-border)] mt-24">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10 text-sm">
       <div>
-        <h3 class="font-semibold text-[var(--color-text)] mb-2">Calculators</h3>
-        <ul class="space-y-1 text-[var(--color-text-muted)]">
+        <h3 class="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-subtle)] mb-3">Calculators</h3>
+        <ul class="space-y-2 text-[var(--color-text-muted)]">
           <li><a href="/">Freight Class</a></li>
           <li><a href="/freight-density-calculator">Density</a></li>
           <li><a href="/dimensional-weight-calculator">Dim Weight</a></li>
@@ -14,25 +14,25 @@ const year = new Date().getFullYear();
         </ul>
       </div>
       <div>
-        <h3 class="font-semibold text-[var(--color-text)] mb-2">More tools</h3>
-        <ul class="space-y-1 text-[var(--color-text-muted)]">
+        <h3 class="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-subtle)] mb-3">Rate &amp; cost</h3>
+        <ul class="space-y-2 text-[var(--color-text-muted)]">
           <li><a href="/freight-rate-calculator">Freight Rate</a></li>
           <li><a href="/fuel-surcharge-calculator">Fuel Surcharge</a></li>
           <li><a href="/cost-per-mile-calculator">Cost per Mile</a></li>
         </ul>
       </div>
       <div>
-        <h3 class="font-semibold text-[var(--color-text)] mb-2">Learn</h3>
-        <ul class="space-y-1 text-[var(--color-text-muted)]">
+        <h3 class="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-subtle)] mb-3">Learn</h3>
+        <ul class="space-y-2 text-[var(--color-text-muted)]">
           <li><a href="/what-is-freight-class">What is Freight Class?</a></li>
           <li><a href="/what-is-ltl-freight">What is LTL Freight?</a></li>
-          <li><a href="/nmfc-codes-explained">NMFC Codes Explained</a></li>
-          <li><a href="/bill-of-lading-guide">Bill of Lading Guide</a></li>
+          <li><a href="/nmfc-codes-explained">NMFC Codes</a></li>
+          <li><a href="/bill-of-lading-guide">Bill of Lading</a></li>
         </ul>
       </div>
       <div>
-        <h3 class="font-semibold text-[var(--color-text)] mb-2">Site</h3>
-        <ul class="space-y-1 text-[var(--color-text-muted)]">
+        <h3 class="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-subtle)] mb-3">Site</h3>
+        <ul class="space-y-2 text-[var(--color-text-muted)]">
           <li><a href="/about">About</a></li>
           <li><a href="/privacy">Privacy</a></li>
           <li><a href="/terms">Terms</a></li>
@@ -40,8 +40,15 @@ const year = new Date().getFullYear();
         </ul>
       </div>
     </div>
-    <p class="text-xs text-[var(--color-text-subtle)] border-t border-[var(--color-border)] pt-4">
-      &copy; {year} FreightClassFinder.com — All calculations run in your browser. Results are density-based estimates; your carrier's assigned NMFC item governs your billed class.
-    </p>
+
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-6 border-t border-[var(--color-border)]">
+      <div class="flex items-center gap-2">
+        <span aria-hidden="true" class="flex items-center justify-center w-5 h-5 rounded bg-[var(--color-text)] text-[var(--color-bg)] font-bold text-[9px] tracking-tight">FC</span>
+        <span class="text-xs text-[var(--color-text-subtle)]">&copy; {year} FreightClassFinder. All calculations run in your browser.</span>
+      </div>
+      <p class="text-xs text-[var(--color-text-subtle)]">
+        Density-based estimates. Your carrier's assigned NMFC item governs the billed class.
+      </p>
+    </div>
   </div>
 </footer>

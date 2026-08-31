@@ -47,152 +47,199 @@ const faqSchema = {
 ---
 <BaseLayout
   title="Freight Class Calculator – Multi-Pallet, Pallet-Aware, Free"
-  description="Free freight class calculator with multi-pallet support, pallet-aware dimensions, and a breakpoint optimizer. Per-line and aggregate density, class 50–500. No signup."
+  description="Free freight class calculator with multi-pallet support, pallet-aware dimensions, and a breakpoint optimizer. Per-line and aggregate density, class 50–500."
   canonical={pageUrl}
   schema={[webAppSchema, faqSchema]}
 >
   <SiteHeader current="/" />
 
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+  <!-- Hero -->
+  <section class="relative border-b border-[var(--color-border)] overflow-hidden">
+    <div class="absolute inset-0 bg-grid opacity-40 pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--color-bg)] pointer-events-none" aria-hidden="true"></div>
+    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 pt-14 pb-10 sm:pt-20 sm:pb-14">
+      <div class="flex items-center gap-2 mb-5">
+        <span class="badge">v1 · Free</span>
+        <span class="text-xs text-[var(--color-text-subtle)]">No signup · Runs in your browser</span>
+      </div>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-[var(--color-text)] max-w-3xl">
+        The freight class calculator carriers built for shippers didn't.
+      </h1>
+      <p class="mt-5 text-lg text-[var(--color-text-muted)] max-w-2xl leading-relaxed">
+        Multi-pallet shipments, pallet-aware dimensions, a breakpoint optimizer that tells you exactly how close you are to a cheaper class — and how close you are to a reclassification invoice.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-[var(--color-text-muted)]">
+        <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[var(--color-success)]"></span>Per-line + aggregate class</span>
+        <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[var(--color-success)]"></span>Standard pallet presets</span>
+        <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[var(--color-success)]"></span>Consolidation analysis</span>
+        <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[var(--color-success)]"></span>Metric / Imperial</span>
+      </div>
+    </div>
+  </section>
 
-    <h1 class="text-3xl sm:text-4xl font-bold text-[var(--color-text)] mb-2">Freight Class Calculator</h1>
-    <p class="text-[var(--color-text-muted)] mb-6">
-      Enter each pallet or handling unit as a row. Get per-line freight class (what your carrier actually bills), shipment totals, and a breakpoint optimizer that tells you how close you are to a cheaper class — in either direction.
-    </p>
+  <main id="main" class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
 
-    <!-- Unit toggle -->
-    <div class="flex flex-wrap items-center gap-4 mb-4 text-sm">
-      <fieldset class="flex items-center gap-2">
-        <legend class="sr-only">Units</legend>
-        <label class="text-[var(--color-text-muted)]">Units:</label>
-        <label class="inline-flex items-center gap-1"><input type="radio" name="units" value="imperial" checked /> in / lb</label>
-        <label class="inline-flex items-center gap-1"><input type="radio" name="units" value="metric" /> cm / kg</label>
-      </fieldset>
+    <!-- Controls bar -->
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div class="flex items-center gap-1 p-1 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-[13px]">
+        <label class="cursor-pointer">
+          <input type="radio" name="units" value="imperial" class="sr-only peer" checked />
+          <span class="inline-flex items-center px-2.5 py-1 rounded peer-checked:bg-[var(--color-bg-elevated)] peer-checked:text-[var(--color-text)] peer-checked:shadow-sm text-[var(--color-text-muted)]">in / lb</span>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="units" value="metric" class="sr-only peer" />
+          <span class="inline-flex items-center px-2.5 py-1 rounded peer-checked:bg-[var(--color-bg-elevated)] peer-checked:text-[var(--color-text)] peer-checked:shadow-sm text-[var(--color-text-muted)]">cm / kg</span>
+        </label>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="copy-summary" type="button" class="btn btn-ghost">Copy summary</button>
+        <button id="copy-share" type="button" class="btn btn-secondary">Share</button>
+        <button id="print-page" type="button" class="btn btn-ghost">Print</button>
+      </div>
     </div>
 
-    <!-- Line items table -->
-    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] shadow-sm overflow-hidden">
+    <!-- Line items -->
+    <div class="card overflow-hidden">
+      <div class="flex items-center justify-between px-5 py-3 border-b border-[var(--color-border)]">
+        <div class="flex items-center gap-2">
+          <h2 class="text-[13px] font-semibold uppercase tracking-wider text-[var(--color-text-subtle)]">Shipment lines</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="clear-lines" type="button" class="btn btn-ghost">Clear</button>
+          <button id="add-line" type="button" class="btn btn-primary">+ Add line</button>
+        </div>
+      </div>
       <div class="overflow-x-auto">
         <table class="w-full text-sm" id="lines-table">
-          <thead class="bg-[var(--color-bg-subtle)] text-[var(--color-text-muted)]">
-            <tr>
-              <th class="text-left p-2 font-medium">Qty</th>
-              <th class="text-left p-2 font-medium">L <span class="unit-len">in</span></th>
-              <th class="text-left p-2 font-medium">W <span class="unit-len">in</span></th>
-              <th class="text-left p-2 font-medium">H <span class="unit-len">in</span></th>
-              <th class="text-left p-2 font-medium">Wt/unit <span class="unit-wt">lb</span></th>
-              <th class="text-left p-2 font-medium">Pallet</th>
-              <th class="text-right p-2 font-medium">Density</th>
-              <th class="text-right p-2 font-medium">Class</th>
-              <th class="p-2"></th>
+          <thead class="text-[11px] uppercase tracking-wider text-[var(--color-text-subtle)]">
+            <tr class="border-b border-[var(--color-border)]">
+              <th class="text-left px-3 py-2 font-medium">Qty</th>
+              <th class="text-left px-3 py-2 font-medium">L <span class="unit-len">in</span></th>
+              <th class="text-left px-3 py-2 font-medium">W <span class="unit-len">in</span></th>
+              <th class="text-left px-3 py-2 font-medium">H <span class="unit-len">in</span></th>
+              <th class="text-left px-3 py-2 font-medium">Wt/unit <span class="unit-wt">lb</span></th>
+              <th class="text-left px-3 py-2 font-medium">Pallet</th>
+              <th class="text-right px-3 py-2 font-medium">Density</th>
+              <th class="text-right px-3 py-2 font-medium">Class</th>
+              <th class="px-2 py-2"></th>
             </tr>
           </thead>
-          <tbody id="lines-body"></tbody>
+          <tbody id="lines-body" class="tabular"></tbody>
         </table>
       </div>
-      <div class="p-3 border-t border-[var(--color-border)] flex flex-wrap gap-2 items-center">
-        <button id="add-line" type="button" class="px-3 py-1.5 rounded-md bg-[var(--color-accent)] text-white text-sm font-medium hover:bg-[var(--color-accent-hover)]" style="min-height:36px">+ Add line</button>
-        <button id="clear-lines" type="button" class="px-3 py-1.5 rounded-md border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)]" style="min-height:36px">Clear</button>
-        <button id="copy-summary" type="button" class="px-3 py-1.5 rounded-md border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] ml-auto" style="min-height:36px">Copy summary</button>
-        <button id="copy-share" type="button" class="px-3 py-1.5 rounded-md border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)]" style="min-height:36px">Copy shareable link</button>
-        <button id="print-page" type="button" class="px-3 py-1.5 rounded-md border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)]" style="min-height:36px">Print</button>
+    </div>
+
+    <!-- NMFC callout -->
+    <div class="mt-4 flex items-start gap-3 rounded-lg border border-[var(--color-warning)]/40 bg-[var(--color-warning-bg)] px-4 py-3 text-[13px] text-[var(--color-text)]">
+      <svg class="mt-0.5 w-4 h-4 shrink-0 text-[var(--color-warning)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+      <div>
+        <strong>Density-based estimate.</strong> If your commodity has an assigned NMFC item number, that item governs your class regardless of density. Confirm with your carrier or broker before shipping. <a href="/nmfc-codes-explained" class="underline underline-offset-2">Learn more →</a>
       </div>
     </div>
 
-    <!-- Density-vs-NMFC callout: persistent, near result -->
-    <div class="mt-4 rounded-md border-l-4 border-[var(--color-warning)] bg-[var(--color-bg-subtle)] px-4 py-3 text-sm text-[var(--color-text)]">
-      <strong>Density-based estimate.</strong> If your commodity has an assigned NMFC item number, that item governs your class regardless of density. Confirm with your carrier or broker before shipping. This tool does not reproduce the NMFC database.
-    </div>
+    <!-- Results grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
 
-    <!-- Results -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-      <div class="rounded-lg border border-[var(--color-border)] bg-[var(--color-result-bg)] p-5">
-        <div class="text-xs text-[var(--color-text-muted)] uppercase tracking-wide mb-1">Shipment totals — not your billed class</div>
-        <div class="flex items-baseline justify-between gap-3">
-          <span class="text-sm text-[var(--color-text-muted)]">Aggregate density</span>
-          <span id="agg-density" class="text-xl font-semibold text-[var(--color-text)]">—</span>
+      <!-- Aggregate -->
+      <div class="lg:col-span-1 card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-subtle)]">Shipment totals</span>
+          <span class="badge">Not billed class</span>
         </div>
-        <div class="flex items-baseline justify-between gap-3 mt-2">
-          <span class="text-sm text-[var(--color-text-muted)]">Aggregate class (cube check)</span>
-          <span id="agg-class" class="text-xl font-semibold text-[var(--color-text)]">—</span>
-        </div>
-        <div class="flex items-baseline justify-between gap-3 mt-2">
-          <span class="text-sm text-[var(--color-text-muted)]">Total weight</span>
-          <span id="agg-weight" class="text-sm font-medium text-[var(--color-text)]">—</span>
-        </div>
-        <div class="flex items-baseline justify-between gap-3 mt-1">
-          <span class="text-sm text-[var(--color-text-muted)]">Total volume</span>
-          <span id="agg-volume" class="text-sm font-medium text-[var(--color-text)]">—</span>
-        </div>
-        <div class="flex items-baseline justify-between gap-3 mt-1">
-          <span class="text-sm text-[var(--color-text-muted)]">Linear feet (96″ trailer)</span>
-          <span id="agg-linear" class="text-sm font-medium text-[var(--color-text)]">—</span>
+        <div class="space-y-3">
+          <div>
+            <div class="text-[11px] text-[var(--color-text-subtle)] uppercase tracking-wider">Aggregate density</div>
+            <div id="agg-density" class="text-2xl font-semibold tabular text-[var(--color-text)] mt-0.5">—</div>
+          </div>
+          <div class="flex justify-between items-baseline pt-3 border-t border-[var(--color-border)]">
+            <span class="text-[13px] text-[var(--color-text-muted)]">Aggregate class</span>
+            <span id="agg-class" class="text-lg font-medium tabular text-[var(--color-text)]">—</span>
+          </div>
+          <div class="flex justify-between items-baseline">
+            <span class="text-[13px] text-[var(--color-text-muted)]">Total weight</span>
+            <span id="agg-weight" class="text-[13px] font-medium tabular text-[var(--color-text)]">—</span>
+          </div>
+          <div class="flex justify-between items-baseline">
+            <span class="text-[13px] text-[var(--color-text-muted)]">Total volume</span>
+            <span id="agg-volume" class="text-[13px] font-medium tabular text-[var(--color-text)]">—</span>
+          </div>
+          <div class="flex justify-between items-baseline">
+            <span class="text-[13px] text-[var(--color-text-muted)]">Linear feet <span class="text-[var(--color-text-subtle)]">(96″ trailer)</span></span>
+            <span id="agg-linear" class="text-[13px] font-medium tabular text-[var(--color-text)]">—</span>
+          </div>
         </div>
       </div>
 
-      <div class="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-5">
-        <div class="text-xs text-[var(--color-text-muted)] uppercase tracking-wide mb-1">Breakpoint optimizer — first line</div>
-        <div id="bp-output" class="text-sm text-[var(--color-text-muted)]">Enter a line to see options.</div>
+      <!-- Breakpoint optimizer -->
+      <div class="lg:col-span-2 card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-subtle)]">Breakpoint optimizer · line 1</span>
+          <span class="badge">Cheaper &amp; risk</span>
+        </div>
+        <div id="bp-output" class="text-[14px] text-[var(--color-text-muted)] leading-relaxed">Enter a line to see options.</div>
       </div>
+
     </div>
 
-    <!-- Consolidation opportunities -->
+    <!-- Consolidation -->
     <div class="mt-4" id="consolidation-block" hidden>
-      <div class="rounded-lg border border-[var(--color-success)] bg-[var(--color-bg-subtle)] p-4">
-        <div class="text-xs uppercase tracking-wide text-[var(--color-success)] font-semibold mb-2">Consolidation opportunity</div>
-        <div id="consolidation-list" class="text-sm text-[var(--color-text)] space-y-2"></div>
+      <div class="card p-5 border-[var(--color-success)]/40 bg-[var(--color-success-bg)]">
+        <div class="flex items-center gap-2 mb-2">
+          <svg class="w-4 h-4 text-[var(--color-success)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-success)]">Consolidation opportunity</span>
+        </div>
+        <div id="consolidation-list" class="text-[14px] text-[var(--color-text)] space-y-2"></div>
       </div>
     </div>
 
     <!-- Density scale -->
     <div class="mt-6">
+      <div class="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-subtle)] mb-2">Density position</div>
       <ClassScale id="main-scale" />
     </div>
 
     <AdSlot size="leaderboard" />
 
-    <article class="prose-section space-y-8 text-[var(--color-text)]">
+    <article class="space-y-12 text-[var(--color-text)] max-w-3xl">
       <section>
-        <h2 class="text-2xl font-semibold mb-3">How to Calculate Freight Class</h2>
-        <ol class="list-decimal list-inside space-y-2 text-[var(--color-text-muted)] leading-relaxed">
-          <li>Measure the <strong>outermost extremes</strong> of each handling unit — pallet footprint plus any overhang, plus the pallet deck height. Carriers measure what they see; declaring the bare box dimensions when it sits on a 48×40 pallet is the single most common source of correction invoices.</li>
-          <li>Weigh each unit on a certified scale. Include the pallet, packaging, and dunnage.</li>
-          <li>Enter one row per handling unit. If you have five identical pallets, use Qty = 5 rather than five rows.</li>
-          <li>Read the <strong>per-line class</strong>. That is what your carrier will bill.</li>
-          <li>Check the aggregate figure only for cube and linear-foot sanity — not as your billed class.</li>
+        <h2 class="text-2xl font-semibold tracking-tight mb-4">How to calculate freight class</h2>
+        <ol class="space-y-3 text-[var(--color-text-muted)] leading-relaxed">
+          <li class="flex gap-3"><span class="shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-[12px] font-semibold text-[var(--color-text)]">1</span>Measure the <strong class="text-[var(--color-text)]">outermost extremes</strong> of each handling unit — pallet footprint plus overhang, plus the pallet deck height. Carriers measure what they see; declaring bare box dimensions when it sits on a 48×40 pallet is the single most common source of correction invoices.</li>
+          <li class="flex gap-3"><span class="shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-[12px] font-semibold text-[var(--color-text)]">2</span>Weigh each unit on a certified scale. Include the pallet, packaging, and dunnage.</li>
+          <li class="flex gap-3"><span class="shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-[12px] font-semibold text-[var(--color-text)]">3</span>Enter one row per handling unit. Five identical pallets use Qty = 5, not five rows.</li>
+          <li class="flex gap-3"><span class="shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-[12px] font-semibold text-[var(--color-text)]">4</span>Read the <strong class="text-[var(--color-text)]">per-line class</strong>. That is what your carrier will bill.</li>
+          <li class="flex gap-3"><span class="shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-[12px] font-semibold text-[var(--color-text)]">5</span>Check the aggregate figure only for cube and linear-foot sanity — not as your billed class.</li>
         </ol>
       </section>
 
       <section>
-        <h2 class="text-2xl font-semibold mb-3">The Math</h2>
-        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm mb-3">
-          Volume (ft³) = (L × W × H in inches) ÷ 1728<br/>
-          Density (lb/ft³) = Weight (lb) ÷ Volume (ft³)<br/>
-          Class = density → published density scale (50–500)
-        </div>
-        <p class="text-[var(--color-text-muted)]">
-          Worked example: a 40×48×48 shipping unit at 425 lb. Volume = (40 × 48 × 48) ÷ 1728 = 53.33 ft³. Density = 425 ÷ 53.33 ≈ 7.97 lb/ft³. On the density scale, 7–8 lb/ft³ maps to <strong>Class 125</strong>. To reach the next cheaper class (110), the same box would need to hit 8 lb/ft³ — adding ~2 lb, or shaving about 0.36″ off the height, gets there.
+        <h2 class="text-2xl font-semibold tracking-tight mb-4">The math</h2>
+        <pre class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 text-[13px] leading-relaxed font-mono overflow-x-auto"><code>volume (ft³) = (L × W × H in) ÷ 1728
+density (lb/ft³) = weight (lb) ÷ volume (ft³)
+class = density → standard scale (50 – 500)</code></pre>
+        <p class="text-[var(--color-text-muted)] mt-4 leading-relaxed">
+          Worked example: a 40×48×48 handling unit at 425 lb. Volume = (40 × 48 × 48) ÷ 1728 = 53.33 ft³. Density = 425 ÷ 53.33 ≈ 7.97 lb/ft³. On the density scale, 7–8 lb/ft³ maps to <strong>Class 125</strong>. To reach the next cheaper class (110), the same box would need to hit 8 lb/ft³ — adding ~2 lb, or shaving about 0.36″ off the height, gets there.
         </p>
       </section>
 
       <section>
-        <h2 class="text-2xl font-semibold mb-3">Per-line vs Aggregate — Why It Matters</h2>
+        <h2 class="text-2xl font-semibold tracking-tight mb-4">Per-line vs aggregate — why it matters</h2>
         <p class="text-[var(--color-text-muted)] leading-relaxed">
-          Carriers rate each line item on the Bill of Lading separately. If you ship two pallets — one dense heavy machinery, one light packaging — the machinery is billed at (say) class 70 and the packaging at class 250. The average density of the shipment is meaningless for billing.
+          Carriers rate each line item on the Bill of Lading separately. Ship two pallets — one dense heavy machinery, one light packaging — and the machinery is billed at (say) class 70 and the packaging at class 250. The average density of the shipment is meaningless for billing.
         </p>
-        <p class="text-[var(--color-text-muted)] leading-relaxed mt-2">
-          The aggregate density is useful for two things only: checking cubic capacity rules (whether your shipment triggers a minimum charge for low density in a large volume) and estimating linear feet (whether the shipment triggers a linear-foot rule). Most competitor calculators report only the aggregate — which is the wrong number to plan around.
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          The aggregate density is useful for two things only: checking cubic capacity rules (whether your shipment triggers a minimum charge for low density in a large volume) and estimating linear feet. Most competitor calculators report only the aggregate — which is the wrong number to plan around.
         </p>
       </section>
 
       <section>
-        <h2 class="text-2xl font-semibold mb-3">Common Mistakes</h2>
-        <ul class="space-y-2 text-[var(--color-text-muted)]">
-          <li><strong>Using the box dimensions instead of the pallet.</strong> Carriers measure the whole unit as it sits on the trailer. Toggle 'Pallet' on each row.</li>
-          <li><strong>Ignoring pallet deck height.</strong> A 6″ GMA pallet adds 6″ to your height and shifts your density.</li>
-          <li><strong>Confusing NMFC item numbers with density classes.</strong> A commodity NMFC item overrides density. If your product has a listed item, use that.</li>
-          <li><strong>Using aggregate for per-line billing.</strong> The two figures are almost never the same and carriers bill per line.</li>
-          <li><strong>Assuming smart carrier tools will fix bad declarations.</strong> They won't — they'll issue a reclassification invoice.</li>
+        <h2 class="text-2xl font-semibold tracking-tight mb-4">Common mistakes</h2>
+        <ul class="space-y-2.5 text-[var(--color-text-muted)]">
+          <li class="flex gap-2"><span class="text-[var(--color-error)] shrink-0">×</span>Using the box dimensions instead of the pallet. Toggle "Pallet" on each row.</li>
+          <li class="flex gap-2"><span class="text-[var(--color-error)] shrink-0">×</span>Ignoring pallet deck height. A 6″ GMA adds 6″ and shifts your density bucket.</li>
+          <li class="flex gap-2"><span class="text-[var(--color-error)] shrink-0">×</span>Confusing NMFC item numbers with density classes. A commodity NMFC item overrides density.</li>
+          <li class="flex gap-2"><span class="text-[var(--color-error)] shrink-0">×</span>Using aggregate for per-line billing. The two are almost never the same.</li>
+          <li class="flex gap-2"><span class="text-[var(--color-error)] shrink-0">×</span>Assuming smart carrier tools will fix bad declarations. They won't — they'll invoice you.</li>
         </ul>
       </section>
     </article>
@@ -218,7 +265,6 @@ const faqSchema = {
   const defaultLine = () => ({
     qty: 1, itemL: 48, itemW: 40, itemH: 48, unitWeight: 500,
     palletized: false, palletKey: 'gma-48x40', palletDeckH: 6, overhangL: 0, overhangW: 0,
-    desc: '',
   });
 
   const $ = (id) => document.getElementById(id);
@@ -228,13 +274,10 @@ const faqSchema = {
     if (state.units === 'imperial') return line;
     return {
       ...line,
-      itemL: cmToIn(line.itemL),
-      itemW: cmToIn(line.itemW),
-      itemH: cmToIn(line.itemH),
+      itemL: cmToIn(line.itemL), itemW: cmToIn(line.itemW), itemH: cmToIn(line.itemH),
       unitWeight: kgToLb(line.unitWeight),
       palletDeckH: cmToIn(line.palletDeckH),
-      overhangL: cmToIn(line.overhangL),
-      overhangW: cmToIn(line.overhangW),
+      overhangL: cmToIn(line.overhangL), overhangW: cmToIn(line.overhangW),
     };
   }
 
@@ -247,24 +290,26 @@ const faqSchema = {
     body.innerHTML = '';
     state.lines.forEach((ln, idx) => {
       const tr = document.createElement('tr');
-      tr.className = 'border-t border-[var(--color-border)]';
+      tr.className = 'border-b border-[var(--color-border)] last:border-b-0';
       tr.innerHTML = `
-        <td class="p-2"><input type="number" min="1" step="1" value="${ln.qty}" data-i="${idx}" data-f="qty" style="width:64px"/></td>
-        <td class="p-2"><input type="number" min="0" step="any" value="${ln.itemL}" data-i="${idx}" data-f="itemL" style="width:80px"/></td>
-        <td class="p-2"><input type="number" min="0" step="any" value="${ln.itemW}" data-i="${idx}" data-f="itemW" style="width:80px"/></td>
-        <td class="p-2"><input type="number" min="0" step="any" value="${ln.itemH}" data-i="${idx}" data-f="itemH" style="width:80px"/></td>
-        <td class="p-2"><input type="number" min="0" step="any" value="${ln.unitWeight}" data-i="${idx}" data-f="unitWeight" style="width:96px"/></td>
-        <td class="p-2">
-          <label class="inline-flex items-center gap-1 text-xs">
-            <input type="checkbox" ${ln.palletized ? 'checked' : ''} data-i="${idx}" data-f="palletized"/> yes
+        <td class="px-3 py-2"><input type="number" min="1" step="1" value="${ln.qty}" data-i="${idx}" data-f="qty" style="width:56px" aria-label="Quantity line ${idx+1}"/></td>
+        <td class="px-3 py-2"><input type="number" min="0" step="any" value="${ln.itemL}" data-i="${idx}" data-f="itemL" style="width:76px" aria-label="Length line ${idx+1}"/></td>
+        <td class="px-3 py-2"><input type="number" min="0" step="any" value="${ln.itemW}" data-i="${idx}" data-f="itemW" style="width:76px" aria-label="Width line ${idx+1}"/></td>
+        <td class="px-3 py-2"><input type="number" min="0" step="any" value="${ln.itemH}" data-i="${idx}" data-f="itemH" style="width:76px" aria-label="Height line ${idx+1}"/></td>
+        <td class="px-3 py-2"><input type="number" min="0" step="any" value="${ln.unitWeight}" data-i="${idx}" data-f="unitWeight" style="width:90px" aria-label="Weight per unit line ${idx+1}"/></td>
+        <td class="px-3 py-2">
+          <label class="inline-flex items-center gap-1.5 text-[12px] text-[var(--color-text-muted)]">
+            <input type="checkbox" ${ln.palletized ? 'checked' : ''} data-i="${idx}" data-f="palletized" aria-label="Palletized line ${idx+1}" style="width:auto;min-height:0"/> palletized
           </label>
-          <select data-i="${idx}" data-f="palletKey" class="text-xs mt-1" ${ln.palletized ? '' : 'disabled'} style="width:auto;padding:2px 4px;min-height:0">
+          <select data-i="${idx}" data-f="palletKey" ${ln.palletized ? '' : 'disabled'} style="width:auto;padding:2px 6px;min-height:0;font-size:11px;margin-top:2px">
             ${PALLET_PRESETS.map(p => `<option value="${p.key}" ${p.key === ln.palletKey ? 'selected' : ''}>${p.label}</option>`).join('')}
           </select>
         </td>
-        <td class="p-2 text-right" id="dens-${idx}">—</td>
-        <td class="p-2 text-right font-semibold" id="cls-${idx}">—</td>
-        <td class="p-2"><button type="button" class="text-xs text-[var(--color-error)]" data-remove="${idx}">×</button></td>
+        <td class="px-3 py-2 text-right text-[var(--color-text-muted)]" id="dens-${idx}">—</td>
+        <td class="px-3 py-2 text-right"><span id="cls-${idx}" class="inline-block px-2 py-0.5 rounded font-medium text-[var(--color-text)]">—</span></td>
+        <td class="px-2 py-2 text-right">
+          <button type="button" class="w-6 h-6 rounded text-[var(--color-text-subtle)] hover:text-[var(--color-error)] hover:bg-[var(--color-bg-subtle)]" data-remove="${idx}" aria-label="Remove line ${idx+1}">×</button>
+        </td>
       `;
       body.appendChild(tr);
     });
@@ -274,56 +319,44 @@ const faqSchema = {
     body.querySelectorAll('input[data-f], select[data-f]').forEach((el) => {
       const i = Number(el.dataset.i);
       const f = el.dataset.f;
-      if (el.type === 'checkbox') {
-        state.lines[i][f] = el.checked;
-      } else if (el.tagName === 'SELECT') {
+      if (el.type === 'checkbox') { state.lines[i][f] = el.checked; }
+      else if (el.tagName === 'SELECT') {
         state.lines[i][f] = el.value;
-        // Sync pallet dims from preset.
         const preset = PALLET_PRESETS.find(p => p.key === el.value);
         if (preset && preset.key !== 'custom') {
           state.lines[i].palletL = preset.l;
           state.lines[i].palletW = preset.w;
           state.lines[i].palletDeckH = preset.deck;
         }
-      } else {
-        state.lines[i][f] = Number(el.value);
-      }
+      } else { state.lines[i][f] = Number(el.value); }
     });
   }
 
   function recompute() {
-    // Convert to imperial for the engine.
     const linesForEngine = state.lines.map((ln) => {
       const preset = PALLET_PRESETS.find(p => p.key === ln.palletKey);
       const withPallet = ln.palletized && preset && preset.key !== 'custom' ? {
-        ...ln,
-        palletL: preset.l, palletW: preset.w, palletDeckH: preset.deck,
+        ...ln, palletL: preset.l, palletW: preset.w, palletDeckH: preset.deck,
       } : ln;
       return toImperialLine(withPallet);
     });
 
     let shipment;
-    try {
-      shipment = computeShipment(linesForEngine);
-    } catch (e) {
+    try { shipment = computeShipment(linesForEngine); }
+    catch (e) {
       state.lines.forEach((_, i) => {
-        $(`dens-${i}`) && ($(`dens-${i}`).textContent = '—');
-        $(`cls-${i}`) && ($(`cls-${i}`).textContent = '—');
+        const d = $(`dens-${i}`), c = $(`cls-${i}`);
+        if (d) d.textContent = '—'; if (c) c.textContent = '—';
       });
-      $('agg-density').textContent = '—';
-      $('agg-class').textContent = '—';
-      $('agg-weight').textContent = '—';
-      $('agg-volume').textContent = '—';
-      $('agg-linear').textContent = '—';
+      ['agg-density','agg-class','agg-weight','agg-volume','agg-linear'].forEach(id => { $(id).textContent = '—'; });
       $('bp-output').textContent = e.message;
       return;
     }
 
     shipment.perLine.forEach((p, i) => {
-      const densCell = $(`dens-${i}`);
-      const clsCell = $(`cls-${i}`);
-      if (densCell) densCell.textContent = fmt(p.lineDensity) + ' lb/ft³';
-      if (clsCell) clsCell.textContent = String(p.lineClass);
+      const d = $(`dens-${i}`), c = $(`cls-${i}`);
+      if (d) d.textContent = fmt(p.lineDensity) + ' lb/ft³';
+      if (c) c.textContent = String(p.lineClass);
     });
 
     $('agg-density').textContent = fmt(shipment.aggregateDensity) + ' lb/ft³';
@@ -336,37 +369,34 @@ const faqSchema = {
       window.updateDensityScale(shipment.perLine[0].lineDensity, shipment.perLine[0].lineClass);
     }
 
-    // Breakpoint on first line.
     const bp = breakpointAnalysis(shipment.perLine[0]);
     let bpHtml = '';
     if (bp.cheaperClass !== null) {
       const t = bp.targets.cheaper;
       const parts = [];
-      if (t.weight.delta > 0) parts.push(`add <strong>${fmt(t.weight.delta, 1)} lb</strong>`);
-      if (t.length.delta > 0)  parts.push(`reduce length by <strong>${fmt(t.length.delta, 2)}″</strong>`);
-      if (t.width.delta > 0)   parts.push(`reduce width by <strong>${fmt(t.width.delta, 2)}″</strong>`);
-      if (t.height.delta > 0)  parts.push(`reduce height by <strong>${fmt(t.height.delta, 2)}″</strong>`);
-      bpHtml += `<p><strong>To reach class ${bp.cheaperClass} (cheaper):</strong> ${parts.join(' · ') || 'already there'}</p>`;
+      if (t.weight.delta > 0) parts.push(`add <strong class="text-[var(--color-text)]">${fmt(t.weight.delta, 1)}&nbsp;lb</strong>`);
+      if (t.length.delta > 0)  parts.push(`reduce length <strong class="text-[var(--color-text)]">${fmt(t.length.delta, 2)}″</strong>`);
+      if (t.width.delta > 0)   parts.push(`reduce width <strong class="text-[var(--color-text)]">${fmt(t.width.delta, 2)}″</strong>`);
+      if (t.height.delta > 0)  parts.push(`reduce height <strong class="text-[var(--color-text)]">${fmt(t.height.delta, 2)}″</strong>`);
+      bpHtml += `<div class="flex items-start gap-2"><span class="mt-0.5 inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full bg-[var(--color-success-bg)] text-[var(--color-success)]">↓</span><div><strong class="text-[var(--color-text)]">Reach class ${bp.cheaperClass}:</strong> ${parts.join(' · ') || 'already there'}</div></div>`;
     }
     if (bp.pricierClass !== null) {
       const t = bp.targets.pricier;
       const details = [];
-      if (t.weight.delta < 0) details.push(`losing <strong>${fmt(-t.weight.delta, 1)} lb</strong>`);
-      if (t.height.delta < 0)  details.push(`gaining <strong>${fmt(-t.height.delta, 2)}″</strong> in height`);
-      bpHtml += `<p class="mt-2 text-[var(--color-warning)]"><strong>Reclassification risk:</strong> falls into class ${bp.pricierClass} on ${details.join(' or ') || 'small changes'}.</p>`;
+      if (t.weight.delta < 0) details.push(`losing <strong class="text-[var(--color-text)]">${fmt(-t.weight.delta, 1)}&nbsp;lb</strong>`);
+      if (t.height.delta < 0)  details.push(`gaining <strong class="text-[var(--color-text)]">${fmt(-t.height.delta, 2)}″</strong> in height`);
+      bpHtml += `<div class="mt-3 flex items-start gap-2"><span class="mt-0.5 inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full bg-[var(--color-warning-bg)] text-[var(--color-warning)]">!</span><div><strong class="text-[var(--color-text)]">Risk of class ${bp.pricierClass}:</strong> ${details.join(' or ') || 'small changes trigger it'}</div></div>`;
     }
     $('bp-output').innerHTML = bpHtml || 'No cheaper class available.';
 
-    // Consolidation
     const opps = consolidationOpportunities(shipment);
     const block = $('consolidation-block');
     const list = $('consolidation-list');
-    if (opps.length === 0) {
-      block.hidden = true;
-    } else {
+    if (opps.length === 0) { block.hidden = true; }
+    else {
       block.hidden = false;
       list.innerHTML = opps.map(o =>
-        `<div>Combine lines ${o.aIndex + 1} and ${o.bIndex + 1} onto one pallet (stack ${fmt(o.combinedH, 1)}″) → class <strong>${o.combinedClass}</strong> vs current worst class ${o.savingsVs}.</div>`
+        `<div>Combine lines <strong>${o.aIndex + 1}</strong> and <strong>${o.bIndex + 1}</strong> onto one pallet (stack ${fmt(o.combinedH, 1)}″) → class <strong class="tabular">${o.combinedClass}</strong> <span class="text-[var(--color-text-muted)]">(vs current worst ${o.savingsVs})</span></div>`
       ).join('');
     }
   }
@@ -397,13 +427,9 @@ const faqSchema = {
   document.addEventListener('input', (e) => {
     const t = e.target;
     if (t.matches && t.matches('input[data-f], select[data-f]')) {
-      readInputs();
-      renderRows();
-      recompute();
-      persistToUrl();
+      readInputs(); renderRows(); recompute(); persistToUrl();
     }
     if (t.matches && t.matches('input[name="units"]')) {
-      // Convert existing values so a round-trip is lossless.
       const nextUnits = t.value;
       if (nextUnits !== state.units) {
         state.lines = state.lines.map(ln => {
@@ -414,10 +440,7 @@ const faqSchema = {
           }
         });
         state.units = nextUnits;
-        updateUnitLabels();
-        renderRows();
-        recompute();
-        persistToUrl();
+        updateUnitLabels(); renderRows(); recompute(); persistToUrl();
       }
     }
   });
@@ -433,11 +456,11 @@ const faqSchema = {
       renderRows(); recompute(); persistToUrl();
     }
     if (t.id === 'copy-share') {
-      navigator.clipboard.writeText(window.location.href).then(() => { t.textContent = 'Link copied!'; setTimeout(() => t.textContent = 'Copy shareable link', 2000); });
+      navigator.clipboard.writeText(window.location.href).then(() => { t.textContent = 'Copied'; setTimeout(() => t.textContent = 'Share', 2000); });
     }
     if (t.id === 'copy-summary') {
       const text = buildSummary();
-      navigator.clipboard.writeText(text).then(() => { t.textContent = 'Copied!'; setTimeout(() => t.textContent = 'Copy summary', 2000); });
+      navigator.clipboard.writeText(text).then(() => { t.textContent = 'Copied'; setTimeout(() => t.textContent = 'Copy summary', 2000); });
     }
     if (t.id === 'print-page') window.print();
   });
@@ -451,10 +474,8 @@ const faqSchema = {
     return `Freight shipment summary\n${lines}\n\nAggregate: ${document.getElementById('agg-density').textContent} · class ${document.getElementById('agg-class').textContent} · ${document.getElementById('agg-weight').textContent} · ${document.getElementById('agg-volume').textContent}\n\n(Aggregate is for cube/linear-foot checks — carriers bill per line.)`;
   }
 
-  // Init
   loadFromUrl();
   if (state.lines.length === 0) state.lines = [defaultLine()];
-  // Reflect units radio
   document.querySelectorAll('input[name="units"]').forEach((el) => { if (el.value === state.units) el.checked = true; });
   updateUnitLabels();
   renderRows();

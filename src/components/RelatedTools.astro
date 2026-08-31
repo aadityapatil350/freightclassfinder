@@ -5,27 +5,33 @@ export interface Props {
 const { current } = Astro.props;
 
 const tools = [
-  { href: '/',                              label: 'Freight Class Calculator',      description: 'Density-based class, per line + shipment aggregate' },
-  { href: '/freight-density-calculator',    label: 'Freight Density Calculator',    description: 'Compute lb/ft³ from dimensions and weight' },
-  { href: '/dimensional-weight-calculator', label: 'Dimensional Weight Calculator', description: 'Parcel dim weight and billable weight' },
-  { href: '/pallet-calculator',             label: 'Pallet Calculator',             description: 'Boxes per pallet — both orientations' },
-  { href: '/freight-rate-calculator',       label: 'Freight Rate Estimator',        description: 'Rough LTL rate from class and weight' },
-  { href: '/fuel-surcharge-calculator',     label: 'Fuel Surcharge Calculator',     description: 'Percentage from DOE diesel price' },
-  { href: '/cost-per-mile-calculator',      label: 'Cost per Mile Calculator',      description: 'Operating cost for trucking' },
+  { href: '/',                              label: 'Freight Class',      description: 'Per-line + aggregate, multi-pallet' },
+  { href: '/freight-density-calculator',    label: 'Freight Density',    description: 'lb/ft³ from dimensions and weight' },
+  { href: '/dimensional-weight-calculator', label: 'Dimensional Weight', description: 'Parcel dim weight, all major carriers' },
+  { href: '/pallet-calculator',             label: 'Pallet Load',        description: 'Boxes per pallet, both orientations' },
+  { href: '/freight-rate-calculator',       label: 'Freight Rate',       description: 'Rough LTL rate estimator' },
+  { href: '/fuel-surcharge-calculator',     label: 'Fuel Surcharge',     description: 'Percentage from DOE index' },
+  { href: '/cost-per-mile-calculator',      label: 'Cost per Mile',      description: 'Trucking operating cost' },
 ];
 
 const related = tools.filter(t => t.href !== current).slice(0, 6);
 ---
-<section class="mt-12 pt-8 border-t border-[var(--color-border)]">
-  <h2 class="text-xl font-semibold text-[var(--color-text)] mb-4">Related Tools</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+<section class="mt-16 pt-10 border-t border-[var(--color-border)]">
+  <div class="flex items-baseline justify-between mb-6">
+    <h2 class="text-xl font-semibold tracking-tight text-[var(--color-text)]">Related tools</h2>
+    <a href="/" class="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text)]">All tools →</a>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
     {related.map(tool => (
       <a
         href={tool.href}
-        class="block rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-4 hover:border-[var(--color-accent)] transition-colors no-underline"
+        class="group card p-4 no-underline transition-colors hover:border-[var(--color-border-strong)]"
       >
-        <div class="font-medium text-[var(--color-accent)]">{tool.label}</div>
-        <div class="text-sm text-[var(--color-text-muted)] mt-0.5">{tool.description}</div>
+        <div class="flex items-center justify-between">
+          <div class="font-medium text-[var(--color-text)] text-[15px]">{tool.label}</div>
+          <svg class="w-4 h-4 text-[var(--color-text-subtle)] group-hover:text-[var(--color-text)] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </div>
+        <div class="text-[13px] text-[var(--color-text-muted)] mt-1">{tool.description}</div>
       </a>
     ))}
   </div>

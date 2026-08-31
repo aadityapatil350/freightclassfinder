@@ -1,0 +1,11 @@
+// Cloudflare deployment config for the static Astro build.
+// Deploy with:  npx astro build && npx wrangler deploy
+// Docs: https://docs.astro.build/en/guides/deploy/cloudflare/
+{
+  "name": "freightclassfinder",
+  "compatibility_date": "2026-08-31",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

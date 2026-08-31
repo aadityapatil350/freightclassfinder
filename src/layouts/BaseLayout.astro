@@ -16,8 +16,9 @@ const schemaArray = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
+  <!-- Blocking theme script — before first paint, prevents FOUC -->
   <script is:inline>
     (function() {
       var theme = localStorage.getItem('theme');
@@ -25,6 +26,10 @@ const schemaArray = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
         theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
       document.documentElement.classList.toggle('dark', theme === 'dark');
+      var meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      meta.content = theme === 'dark' ? '#000000' : '#ffffff';
+      document.head.appendChild(meta);
     })();
   </script>
 
@@ -32,12 +37,18 @@ const schemaArray = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
 
+  <!-- Fonts: Geist via CDN, preconnected for perf -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" />
+
   <meta property="og:type" content="website" />
   <meta property="og:url" content={canonical} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:image" content={ogImage} />
-  <meta property="og:site_name" content="FreightClassFinder.com" />
+  <meta property="og:site_name" content="FreightClassFinder" />
   <meta property="og:locale" content="en_US" />
 
   <meta name="twitter:card" content="summary_large_image" />
@@ -50,10 +61,10 @@ const schemaArray = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
   ))}
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="theme-color" content="#2563eb" />
   <meta name="robots" content="index, follow" />
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen antialiased">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:bg-[var(--color-text)] focus:text-[var(--color-bg)] focus:rounded">Skip to content</a>
   <slot />
 </body>
 </html>

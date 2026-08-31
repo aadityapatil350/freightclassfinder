@@ -6,45 +6,61 @@ export interface Props {
 }
 const { current = '' } = Astro.props;
 
-const navLinks = [
-  { href: '/',                               label: 'Class' },
-  { href: '/freight-density-calculator',     label: 'Density' },
-  { href: '/dimensional-weight-calculator',  label: 'Dim Weight' },
-  { href: '/pallet-calculator',              label: 'Pallet' },
-  { href: '/freight-rate-calculator',        label: 'Rate' },
-  { href: '/fuel-surcharge-calculator',      label: 'Fuel' },
-  { href: '/cost-per-mile-calculator',       label: 'CPM' },
+const navGroups = [
+  {
+    label: 'Calculators',
+    items: [
+      { href: '/',                              label: 'Freight Class' },
+      { href: '/freight-density-calculator',    label: 'Density' },
+      { href: '/dimensional-weight-calculator', label: 'Dim Weight' },
+      { href: '/pallet-calculator',             label: 'Pallet' },
+      { href: '/freight-rate-calculator',       label: 'Rate' },
+      { href: '/fuel-surcharge-calculator',     label: 'Fuel' },
+      { href: '/cost-per-mile-calculator',      label: 'Cost / Mi' },
+    ],
+  },
 ];
+const primaryNav = navGroups[0].items;
 ---
-<header class="border-b border-[var(--color-border)] bg-[var(--color-bg)]">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14 gap-4">
+<header class="sticky top-0 z-40 backdrop-blur-xl bg-[color-mix(in_srgb,var(--color-bg)_85%,transparent)] border-b border-[var(--color-border)]">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14 gap-3">
     <a
       href="/"
-      class="font-semibold text-[var(--color-text)] no-underline text-sm shrink-0"
+      class="group flex items-center gap-2 no-underline shrink-0"
       aria-label="FreightClassFinder home"
     >
-      FreightClassFinder
+      <span aria-hidden="true" class="flex items-center justify-center w-6 h-6 rounded-md bg-[var(--color-text)] text-[var(--color-bg)] font-bold text-[10px] tracking-tight">FC</span>
+      <span class="font-semibold text-[var(--color-text)] text-sm tracking-tight">FreightClassFinder</span>
     </a>
-    <nav aria-label="Freight tools" class="flex-1 overflow-x-auto">
-      <ul class="flex items-center gap-1 list-none p-0 m-0">
-        {navLinks.map(link => (
-          <li>
-            <a
-              href={link.href}
-              aria-current={link.href === current ? 'page' : undefined}
-              class={`inline-block px-3 py-1.5 rounded-md text-sm no-underline whitespace-nowrap transition-colors ${
-                link.href === current
-                  ? 'bg-[var(--color-accent)] text-white font-medium'
-                  : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-subtle)]'
-              }`}
-              style="min-height:36px;display:inline-flex;align-items:center;"
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
+
+    <nav aria-label="Freight tools" class="flex-1 min-w-0 overflow-x-auto no-scrollbar">
+      <ul class="flex items-center gap-0.5 list-none p-0 m-0 justify-end">
+        {primaryNav.map(link => {
+          const isActive = link.href === current;
+          return (
+            <li>
+              <a
+                href={link.href}
+                aria-current={isActive ? 'page' : undefined}
+                class={`inline-flex items-center px-2.5 h-8 rounded-md text-[13px] no-underline whitespace-nowrap transition-colors ${
+                  isActive
+                    ? 'text-[var(--color-text)] bg-[var(--color-bg-subtle)] font-medium'
+                    : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-subtle)]'
+                }`}
+              >
+                {link.label}
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </nav>
+
     <ThemeToggle />
   </div>
 </header>
+
+<style>
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+</style>
