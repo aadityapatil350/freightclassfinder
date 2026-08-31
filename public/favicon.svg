@@ -1,4 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="10" fill="#2563eb"/>
-  <text x="32" y="42" font-family="-apple-system, system-ui, sans-serif" font-size="30" font-weight="700" text-anchor="middle" fill="#ffffff">FC</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="FreightClassFinder">
+  <rect width="64" height="64" rx="12" fill="#0070f3"/>
+  <!-- Stacked pallet marks -->
+  <rect x="14" y="18" width="36" height="7" rx="1.5" fill="#ffffff"/>
+  <rect x="14" y="29" width="36" height="7" rx="1.5" fill="#ffffff" opacity="0.85"/>
+  <rect x="14" y="40" width="36" height="7" rx="1.5" fill="#ffffff" opacity="0.7"/>
+  <!-- Base line -->
+  <rect x="12" y="49" width="40" height="2" rx="1" fill="#ffffff" opacity="0.5"/>
 </svg>
